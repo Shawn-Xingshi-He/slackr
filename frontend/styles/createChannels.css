@@ -1,0 +1,13 @@
+#createChannelForm,
+#currentChannelInfo {
+    display: none;
+    z-index: 1;
+    position: absolute;
+    top: 0px;
+    width: 400px;
+    height: 400px;
+    margin-top: 50px;
+    background-color: rgb(255, 255, 255);
+    grid-template-rows: repeat(5, 1fr);
+    text-align: center;
+}

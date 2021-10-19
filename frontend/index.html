@@ -2,27 +2,98 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Slackr</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- You can add your styles and scripts here -->
-  <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
-  <script type="module" src="src/helpers.js"></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Slackr</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- You can add your styles and scripts here -->
+    <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="styles/createChannels.css" />
+    <script type="module" src="src/helpers.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-  <!-- This is an example app structure, you can modify this as much as you choose -->
-  <header class="banner">
-    <h1>Slackr</h1>
-  </header>
-  <main role="main">
-    <!-- app goes here -->
-  </main>
-  <footer>
-    <p>&copy; Slackr</p>
-  </footer>
-  <script type="module" src="src/main.js"></script>
+    <!-- This is an example app structure, you can modify this as much as you choose -->
+    <div id="mask"></div>
+    <div id="createChannelForm">
+        <div id="createChannelTitleBar">Create a channel<span class="closePopupBtn">X</span></div>
+        <div id="createChannelNameBar">
+            <label for="newChannelName">Name</label><br>
+            <div id="newChannelNameBox"><span class="glyphicon glyphicon-lock"></span><input type="text" name="" id="newChannelName"></div>
+        </div>
+        <div id="createChannelDescriptionBar">
+            <label for="newChannelDescription">Description</label><br>
+            <input type="text" name="" id="newChannelDescription">
+        </div>
+        <div id="makeChannelPrivatenBar">
+            <label for="makePrivate">Make private</label>
+            <input type="checkbox" name="" id="makePrivate"> </div>
+        <button id='createChannelBtn'>Create</button>
+    </div>
+
+    <div id="currentChannelInfo">
+        <!-- This information includes the name of the channel, description, 
+        public/private setting, creation timestamp (as a time/date not as an ISO string,
+         flexible to whatever you think is user-friendly), and name of the creator of the 
+         channel. -->
+        <div id="currentChannelInfoTitle"><span class="closePopupBtn">X</span></div>
+        <div id="currentChannelInfoName"></div>
+        <div id="currentChannelInfoDescription"></div>
+        <div id="currentChannelInfoCreatorAndTime"></div>
+        <div id="currentChannelInfoLeave"></div>
+    </div>
+
+    <main role="main">
+        <!-- app goes here -->
+        <div id="login">
+            <label for="loginEmail">Email: </label> <input type="text" id="loginEmail"> <br> <br>
+            <label for="loginPassword"> Password: </label><input type="password" id="loginPassword" value="123456"><br><br>
+            <div id="loginError" style="display: none;">Your email or password was incorrect.</div>
+            <button type="submit" id="loginBtn">Sign in</button>
+            <div id="toRegisterPage">
+                <a href="#">New to Slackr? Create an account</a>
+            </div>
+        </div>
+
+        <div id="register" style="display: none;">
+            <label for="registerEmail">Email: </label> <input type="text" id="registerEmail"> <br> <br>
+            <label for="registerName">Name: </label> <input type="text" id="registerName"> <br> <br>
+            <label for="registerPassword"> Password: </label><input type="password" id="registerPassword"><br><br>
+            <label for="registerConfirmPassword"> Confirm Password: </label><input type="password" id="registerConfirmPassword"><br><br>
+            <div id="registerError" style="display: none;">Your passwords didn't match.</div>
+            <button type="submit" id="registerBtn">Register</button>
+            <div id="toLoginPage">
+                <a href="#">Already have an account? Sign in</a>
+            </div>
+
+        </div>
+
+        <div id="channels">
+            <header>Slackr <span class="glyphicon glyphicon-user"></span> </header>
+            <div id="channelsBar">
+                <h3>Channels</h3>
+                <div id="tackleChannelBtn"><b>+</b></div>
+                <div id="tackleChannelPopup" style="display: none;">
+                    <div id="createChannel">Create a channel</div>
+                </div>
+                <div id="channelsList"></div>
+            </div>
+            <div id="channelContent">
+                <header><span id="currentChannelName"></span><span class="glyphicon glyphicon-user"></span> </header>
+                <div id="currentChannelChatBox"></div>
+                <div id="currentChannelPostBox"></div>
+            </div>
+        </div>
+
+    </main>
+    <!-- <footer>
+        <p>&copy; Slackr</p>
+    </footer> -->
+    <script type="module" src="src/main.js"></script>
 </body>
 
 </html>
