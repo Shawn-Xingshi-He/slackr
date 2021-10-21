@@ -2,10 +2,10 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import { openChannels } from './channels.js';
-import { hideContentById, displayContentById } from "./utility.js";
+import { hideContentById, hideContentByClass, displayContentById } from "./utility.js";
 
 
-// page switch
+// switch signIn page and register page 
 document.getElementById('toRegisterPage').addEventListener('click', () => {
     hideContentById('login');
     displayContentById('register');
@@ -16,8 +16,7 @@ document.getElementById('toLoginPage').addEventListener('click', () => {
     displayContentById('login');
 });
 
-// login part
-
+// sign in
 document.getElementById('loginBtn').addEventListener('click', () => {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
@@ -38,6 +37,7 @@ document.getElementById('loginBtn').addEventListener('click', () => {
             hideContentById('loginError');
             console.log('Login succeeded!');
             response.json().then((data) => {
+                localStorage.setItem('userId', data['userId']);
                 localStorage.setItem('token', data['token']);
                 openChannels(data['token']);
             })
@@ -47,8 +47,30 @@ document.getElementById('loginBtn').addEventListener('click', () => {
     });
 });
 
-// register page
+// sign out
+document.getElementById('signOutBtn').addEventListener('click', () => {
+    const token = localStorage.getItem('token');
+    fetch('http://localhost:5005/auth/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+        }
+    }).then((response) => {
+        if (response.status === 200) {
+            // hideContentById('loginError');
+            console.log('Logout succeeded!');
+            response.json().then((data) => {
+                hideContentById('channels');
+                displayContentById('login');
+            })
+        } else if (response.status === 400) {
+            alert('loginOut failed...');
+        }
+    });
+})
 
+// register
 document.getElementById('registerBtn').addEventListener('click', () => {
     const email = document.getElementById('registerEmail').value;
     const name = document.getElementById('registerName').value;
@@ -72,7 +94,10 @@ document.getElementById('registerBtn').addEventListener('click', () => {
         hideContentById('registerError');
         fetch('http://localhost:5005/auth/register', requestOptions).then((response) => {
             if (response.status === 200) {
-                response.json().then((data) => { openChannels(data['token']); })
+                response.json().then((data) => {
+                    console.log(data);
+                    openChannels(data['token']);
+                })
             } else if (response.status === 400) {
                 alert("please enter valid details!");
             }
