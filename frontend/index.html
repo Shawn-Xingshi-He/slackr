@@ -60,6 +60,16 @@
         </div>
     </div>
 
+    <div id="messageEditBtn" class="btn-group dropstart " style="display: none;">
+        <button type="button" class="btn btn-secondary dropdown-toggle editBtn" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #234E75 ;">
+      Edit
+    </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Edit message</a></li>
+            <li><a class="dropdown-item" href="#" style="color: red;">Delete message</a></li>
+            <li><a class="dropdown-item" href="#">Pin to channel</a></li>
+        </ul>
+    </div>
     <!-- <main role="main"> -->
     <!-- app goes here -->
     <div id="login">
@@ -90,7 +100,7 @@
             <div id="headerLogo">Slackr</div>
             <!-- <div id="headerUserIcon" class="glyphicon glyphicon-user"></div> -->
             <div class="btn-group dropstart">
-                <button id="headerUserIcon" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <button id="headerUserIcon" type="button" class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="./images/person-circle.svg" alt="">
               </button>
                 <ul class="dropdown-menu">
@@ -120,12 +130,17 @@
             <div id="currentChannelChatBox">
                 <!-- <div class="oneMessage">
                     <img class="messageSenderImg" src="./images/door-closed-fill.svg" alt="">
-                    <span class="messageSender">dssd</span>
-                    <span class="messageTimeStamp">dds</span>
+                    <span class="messageSender">dssd<span class="messageTimeStamp">dds</span></span>
                     <span class="messageContent">sdd</span>
                 </div> -->
+
             </div>
-            <div id="currentChannelPostBox"></div>
+
+            <div id="currentChannelInput" contenteditable="true"></div>
+            <div id="currentChannelInputTackle">
+                <button id="sendMsgBtn" type="button" class="btn btn-success">Send</button>
+            </div>
+
         </div>
     </div>
 
@@ -134,6 +149,7 @@
         <p>&copy; Slackr</p>
     </footer> -->
     <script type="module" src="src/main.js"></script>
+    <script type="module" src="./src/messages.js"></script>
 </body>
 
 </html>

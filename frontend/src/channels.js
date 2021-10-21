@@ -1,5 +1,5 @@
 import { hideContentById, hideContentByClass, displayContentById } from "./utility.js";
-
+import { timeStampSwitch, refreshCurrentChannelMsg } from "./messages.js";
 
 const userId = localStorage.getItem('userId');
 const token = localStorage.getItem('token');
@@ -22,81 +22,39 @@ document.getElementById('currentChannelInfo').addEventListener('click', (e) => {
     e.stopPropagation();
 })
 
-const createBox = (boxType, givenClass, message) => {
-    const box = document.createElement(boxType);
-    box.className = givenClass;
-    box.innerText = message;
-    return box;
-}
-
 // get a chosen joined channels information from backend
-const linkChannel = (id) => {
+
+export const linkChannel = (id) => {
     document.getElementById(id).addEventListener('click', () => {
-        let requestOptions = {
+        localStorage.setItem('currentChannelId', id);
+        const requestOptions = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token,
             }
         };
-        fetch(`http://localhost:5005/channel/${id}`, requestOptions).then(
-            (response) => {
-                if (response.status === 200) {
-                    response.json().then((data) => {
-                        // console.log(data);
-                        const currentChannelName = document.getElementById('currentChannelName');
-                        currentChannelName.innerText = data['name'];
-                        currentChannelName.addEventListener('click', () => {
-                            localStorage.setItem('channelId', id);
-                            document.getElementById('currentChannelInfoTitle').children[0].innerText = `Channel: ${data['name']}`;
-                            document.getElementById('currentChannelInfoName').children[1].innerText = data['name'];
-                            document.getElementById('currentChannelInfoDescription').children[1].innerText = data['description'];
-                            document.getElementById('currentChannelInfoCreatorAndTime').children[1].innerText = data['creator'] + ' ' + data['createdAt'];
-                            displayContentById('currentChannelInfoMask');
-                        })
-                    });
-                } else {
-                    alert("Channel opening failed...");
-                }
+        fetch(`http://localhost:5005/channel/${id}`, requestOptions).then((response) => {
+            if (response.status === 200) {
+                response.json().then((data) => {
+                    // console.log(data);
+                    const currentChannelName = document.getElementById('currentChannelName');
+                    currentChannelName.innerText = data['name'];
+                    currentChannelName.addEventListener('click', () => {
+                        localStorage.setItem('channelId', id);
+                        document.getElementById('currentChannelInfoTitle').children[0].innerText = `Channel: ${data['name']}`;
+                        document.getElementById('currentChannelInfoName').children[1].innerText = data['name'];
+                        document.getElementById('currentChannelInfoDescription').children[1].innerText = data['description'];
+                        document.getElementById('currentChannelInfoCreatorAndTime').children[1].innerText = data['creator'] + ' on ' + timeStampSwitch(data['createdAt'])[1];
+                        displayContentById('currentChannelInfoMask');
+                    })
+                });
+            } else {
+                alert("Channel opening failed...");
             }
-        );
+        });
+        refreshCurrentChannelMsg(id, token);
 
-        fetch(`http://localhost:5005/message/${id}?start=0`, requestOptions).then(
-            (response) => {
-                if (response.status === 200) {
-                    response.json().then((data) => {
-                        console.log(data);
-                        let messages = data['messages'];
-                        const currentChannelChatBox = document.getElementById('currentChannelChatBox');
-                        for (let n = 0; n < messages.length; n++) {
-                            const chat = document.createElement('div');
-                            chat.className = 'oneMessage';
-                            // chat.setAttribute('meme', '');
-                            chat.append(createBox('span', 'messageSender', messages[n]['sender']));
-                            chat.append(createBox('span', 'messageTimeStamp', messages[n]['sentAt']));
-                            chat.append(createBox('span', 'messageContent', messages[n]['message']));
-                            chat.append(createBox('span', 'messageSenderImg', messages[n]['sender']));
-                            // messageSenderImg "
-                            currentChannelChatBox.insertBefore(chat, currentChannelChatBox.firstElementChild);
-
-                        }
-
-                        //     currentChannelName.innerText = data['name'];
-                        // currentChannelName.addEventListener('click', () => {
-                        //     // console.log(id);
-                        //     localStorage.setItem('channelId', id);
-                        //     document.getElementById('currentChannelInfoTitle').children[0].innerText = `Channel: ${data['name']}`;
-                        //     document.getElementById('currentChannelInfoName').children[1].innerText = data['name'];
-                        //     document.getElementById('currentChannelInfoDescription').children[1].innerText = data['description'];
-                        //     document.getElementById('currentChannelInfoCreatorAndTime').children[1].innerText = data['creator'] + ' ' + data['createdAt'];
-                        //     displayContentById('currentChannelInfoMask');
-
-                    });
-                } else {
-                    alert("gettingMessage failed...");
-                }
-            }
-        );
     });
 };
 
@@ -148,10 +106,7 @@ document.getElementById('confirmPopupBtn').addEventListener('click', () => {
             alert("joinChannel failed...");
         }
     })
-
-
 })
-
 
 // show a list of channels
 const itemExistInArray = (target, array) => {
@@ -218,21 +173,6 @@ export const openChannels = (token) => {
 let createFlag = true;
 document.getElementById('tackleChannelBtn').addEventListener('click', () => { displayContentById('createChannelFormMask') });
 
-// display createChannelFrom
-// document.getElementById('createChannel').addEventListener('click', () => {
-//     displayContentById('createChannelFormMask');
-// });
-
-// //mediate createChannelFrom in the window dynamically
-// window.addEventListener('resize', () => {
-//     let formWidth = parseInt(getComputedStyle(document.getElementById('createChannelForm')).width);
-//     document.getElementById('createChannelForm').style.left = (document.documentElement.clientWidth - formWidth) / 2 + 'px';
-//     let formwidth = parseInt(getComputedStyle(document.getElementById('currentChannelInfo')).width);
-//     document.getElementById('currentChannelInfo').style.left = (document.documentElement.clientWidth - formWidth) / 2 + 'px';
-// })
-
-
-//
 document.getElementById('createChannelBtn').addEventListener('click', () => {
     const name = document.getElementById('newChannelName').value;
     const description = document.getElementById('newChannelDescription').value;
