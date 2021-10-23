@@ -1,17 +1,16 @@
 /* createChannelPopup, currentChannelInfoPopup */
 
 #createChannelForm,
-#currentChannelInfo {
+#currentChannelInfo,
+#userProfileInfo {
     display: grid;
-    z-index: 1;
     overflow: hidden;
-    width: 600px;
-    max-height: 500px;
-    height: 100%;
+    overflow-wrap: break-word;
+    max-width: 600px;
     border-radius: 10px;
     background-color: rgb(231, 231, 231);
     grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: 60px 1fr;
+    /* grid-template-rows: 60px 1fr; */
     gap: 10px 0;
     color: black !important;
 }
@@ -62,12 +61,7 @@
     width: 0;
 }
 
-#currentChannelInfoName,
-#createChannelNameBar,
-#currentChannelInfoDescription,
-#createChannelDescriptionBar,
-#currentChannelInfoCreatorAndTime,
-#makeChannelPrivateBar {
+.infoItem {
     grid-column: 2/12;
     padding: 10px;
     background-color: white;
@@ -126,4 +120,25 @@
     background-color: red;
     display: grid;
     place-items: center;
+}
+
+
+/* pinPopup */
+
+#pinPopup,
+#memberPopup {
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+    display: grid;
+    width: 100%;
+    padding: 1em 2em;
+    background-color: #4AA3F7;
+    border-radius: 0.5em;
+}
+
+
+/* memberPopup */
+
+#memberPopup::-webkit-scrollbar {
+    width: 0;
 }

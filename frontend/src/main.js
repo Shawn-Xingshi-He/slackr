@@ -39,6 +39,7 @@ document.getElementById('loginBtn').addEventListener('click', () => {
             response.json().then((data) => {
                 localStorage.setItem('userId', data['userId']);
                 localStorage.setItem('token', data['token']);
+                console.log('loginUserId', localStorage.getItem('userId'));
                 openChannels(data['token']);
             })
         } else if (response.status === 400) {
@@ -61,6 +62,7 @@ document.getElementById('signOutBtn').addEventListener('click', () => {
             // hideContentById('loginError');
             console.log('Logout succeeded!');
             response.json().then((data) => {
+                localStorage.clear();
                 hideContentById('channels');
                 displayContentById('login');
             })
@@ -96,6 +98,8 @@ document.getElementById('registerBtn').addEventListener('click', () => {
             if (response.status === 200) {
                 response.json().then((data) => {
                     console.log(data);
+                    localStorage.setItem('userId', data['userId']);
+                    localStorage.setItem('token', data['token']);
                     openChannels(data['token']);
                 })
             } else if (response.status === 400) {
