@@ -39,6 +39,7 @@ document.getElementById('loginBtn').addEventListener('click', () => {
             response.json().then((data) => {
                 localStorage.setItem('userId', data['userId']);
                 localStorage.setItem('token', data['token']);
+                localStorage.setItem('password', password);
                 console.log('loginUserId', localStorage.getItem('userId'));
                 openChannels(data['token']);
             })
@@ -100,6 +101,7 @@ document.getElementById('registerBtn').addEventListener('click', () => {
                     console.log(data);
                     localStorage.setItem('userId', data['userId']);
                     localStorage.setItem('token', data['token']);
+                    localStorage.setItem('password', password);
                     openChannels(data['token']);
                 })
             } else if (response.status === 400) {

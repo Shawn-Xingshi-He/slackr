@@ -1,6 +1,12 @@
 import { hideContentById, hideContentByClass, displayContentById } from "./utility.js";
-import { itemExistInArray } from './channels.js';
+import { itemExistInArray, closePopupForm } from './channels.js';
+import { fileToDataUrl } from './helpers.js';
 
+
+export const prompt = (info) => {
+    document.getElementById('promptContent').innerText = info;
+    displayContentById('promptPopup');
+};
 
 export let allUsersInfo = new Object();
 const getOneUserInfo = (userId, token) => {
@@ -95,80 +101,108 @@ export const getAllUsers = (token) => {
 
 }
 
+// display user profile and update
 document.getElementById('userProfileBtn').addEventListener('click', () => {
     displayContentById('userProfileMask');
-})
+    const userId = localStorage.getItem('userId');
+    const password = localStorage.getItem('password');
+    const token = localStorage.getItem('token');
+    // console.log(userId);
+    // console.log(allUsersInfo);
 
-/* <div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-  <label class="form-check-label" for="flexCheckDefault">
-    Default checkbox
-  </label>
-</div> */
-const uploadInfo = () => {
-    const editMessage = newMsgEditBtn.children[1].children[0];
-    editMessage.addEventListener('click', () => {
-        const seletedMsg = document.getElementById(messages[n]['id']);
-        // console.log('edit', messages[n]['id']);
-        const editWindow = document.createElement('span');
-        editWindow.innerText = seletedMsg.children[1].innerText;
-        editWindow.contentEditable = true;
-        editWindow.className = 'messageContent';
-        const formerMsg = seletedMsg.children[1];
-        seletedMsg.replaceChild(editWindow, formerMsg);
+    fetch(`http://localhost:5005/user/${userId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+        }
+    }).then((response) => {
+        if (response.status === 200) {
+            response.json().then((data) => {
+                console.log(data);
+                document.getElementById('userProfileInfoName').value = data['name'];
+                document.getElementById('userProfileInfoBio').value = data['bio'];
+                document.getElementById('userProfileInfoEmail').value = data['email'];
+                document.getElementById('userProfileInfoPassword').value = password;
+                document.getElementById('userProfileInfoImage').value = data['image'];
+                document.getElementById('userProfileInfoImageShow').src = data['image'];
 
-        const cancelBtn = document.createElement('button');
-        cancelBtn.className = 'btn btn-danger';
-        cancelBtn.innerText = 'Cancel';
-        cancelBtn.style.gridColumn = '2/3';
-        cancelBtn.style.marginTop = '0.5em';
-        cancelBtn.style.fontSize = '0.7em';
-        seletedMsg.append(cancelBtn);
-        const saveBtn = document.createElement('button');
-        saveBtn.className = 'btn btn-primary';
-        saveBtn.innerText = 'Save Changes';
-        saveBtn.style.gridColumn = '4/6';
-        saveBtn.style.marginTop = '0.5em';
-        saveBtn.style.fontSize = '0.7em';
-        seletedMsg.append(saveBtn);
 
-        saveBtn.addEventListener('click', () => {
-            // console.log(seletedMsg.children);
-            // console.log(editWindow.innerText, formerMsg.innerText);
-            if (editWindow.innerText.match(/^\s*$/)) {
-                alert('empty message or message containing only whitespace!!!!');
-                editWindow.innerText = formerMsg.innerText;
-            } else if (editWindow.innerText === formerMsg.innerText) {
-                alert('cannot edit a message to the same existing message...');
-                // seletedMsg.replaceChild(seletedMsg.children[1], editWindow);
-            } else {
-                const token = localStorage.getItem('token');
-                const currentChannelId = localStorage.getItem('currentChannelId');
-                const editInfo = JSON.stringify({
-                    message: editWindow.innerText,
-                    image: '',
-                });
-                // console.log(editInfo);
-
-                requestOptions = {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token,
-                    },
-                    body: editInfo,
-                };
-                fetch(`http://localhost:5005/message/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
-                    if (response.status === 200) {
-                        response.json().then((data) => {
-                            for (let m = 0; m < editBtns.length; m++) { editBtns[m].disabled = false; };
-                            refreshCurrentChannelMsg(currentChannelId, token, allUsersInfo);
-                        });
+                document.getElementById('userProfileInfoPasswordToggle').addEventListener('click', () => {
+                    if (document.getElementById('userProfileInfoPasswordToggle').checked === true) {
+                        document.getElementById('userProfileInfoPassword').type = 'text';
+                        console.log('nihao');
                     } else {
-                        alert("sendMessage failed...");
-                    }
+                        document.getElementById('userProfileInfoPassword').type = 'Password';
+                    };
                 });
-            };
-        })
+            });
+        } else {
+            alert("getUserProfileInfo failed...");
+        };
     });
-};
+    console.log(document.getElementById('userProfileInfoImage'));
+
+    document.getElementById('userProfileInfoImage').addEventListener('change', () => {
+
+        const file = document.getElementById('userProfileInfoImage').files[0];
+        console.log(document.getElementById('userProfileInfoImage').files[0]['name']);
+        fileToDataUrl(file).then(data => {
+            document.getElementById('userProfileInfoImageShow').src = data;
+        });
+    });
+
+
+});
+
+document.getElementById('userProfileUpdateBtn').addEventListener('click', () => {
+    const newEmail = document.getElementById('userProfileInfoEmail').value;
+    const newName = document.getElementById('userProfileInfoName').value;
+    const newBio = document.getElementById('userProfileInfoBio').value;
+    const newImage = document.getElementById('userProfileInfoImage').value;
+    const newPassword = document.getElementById('userProfileInfoPassword').value;
+
+    const userId = localStorage.getItem('userId');
+    if (newEmail === allUsersInfo[userId]['email'] && newName === allUsersInfo[userId]['name'] &&
+        newBio === allUsersInfo[userId]['bio'] && newImage === allUsersInfo[userId]['image'] &&
+        newPassword === localStorage.getItem('password')) {
+        prompt("Nothing changed!!! Try again!!!")
+    } else {
+        const userProfileUpdateInfo = JSON.stringify({
+            email: newEmail,
+            password: newPassword,
+            name: newName,
+            bio: newBio,
+            image: newImage
+        });
+
+        const token = localStorage.getItem('token');
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: userProfileUpdateInfo,
+        }
+
+        fetch('http://localhost:5005/user', requestOptions).then((response) => {
+            if (response.status === 200) {
+                response.json().then((data) => {
+                    // closePopupForm();
+                    allUsersInfo[userId]['email'] = newEmail;
+                    allUsersInfo[userId]['name'] = newName;
+                    allUsersInfo[userId]['bio'] = newBio;
+                    allUsersInfo[userId]['image'] = newImage;
+                    localStorage.setItem('password', newPassword);
+                    prompt("Update user's own profile successfully!!!");
+                    console.log("Update user's own profile successfully!!!");
+                });
+            } else {
+                alert("Failed to update user's own profile...");
+            };
+        });
+    }
+
+});

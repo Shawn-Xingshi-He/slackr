@@ -6,7 +6,7 @@ import { getAllUsers, allUsersInfo } from "./users.js";
 // const token = localStorage.getItem('token');
 
 // close popupFrom
-const closePopupForm = () => { hideContentByClass('mask') };
+export const closePopupForm = () => { hideContentByClass('mask') };
 
 const closeMasks = document.getElementsByClassName('mask')
 for (let n = 0; n < closeMasks.length; n++) {

@@ -70,6 +70,7 @@ main {
 
 #channelsList {
     display: grid;
+    overflow-wrap: anywhere;
 }
 
 .channelType {

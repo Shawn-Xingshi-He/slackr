@@ -1,4 +1,5 @@
 import { allUsersInfo } from "./users.js";
+import { displayContentById } from "./utility.js";
 
 const userId = localStorage.getItem('userId');
 
@@ -46,9 +47,45 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     // console.log(allUsersInfo[messages[n]['sender']]);
 
                     const senderName = allUsersInfo[messages[n]['sender']]['name'];
-                    const senderAndTime = createBox('span', 'messageSender', `${senderName} `);
-                    senderAndTime.append(createBox('span', 'messageTimeStamp', timeStampSwitch(messages[n]['sentAt'])[1] +
-                        ' ' + timeStampSwitch(messages[n]['sentAt'])[2]));
+                    const senderBox = createBox('span', '', `${senderName}`);
+                    const senderAndTime = createBox('span', 'messageSender', '');
+                    senderAndTime.append(senderBox);
+                    const timeBox = createBox('span', 'messageTimeStamp', ' ' + timeStampSwitch(messages[n]['sentAt'])[1] +
+                        ' ' + timeStampSwitch(messages[n]['sentAt'])[2]);
+                    timeBox.style.fontSize = '0.8em';
+                    timeBox.style.color = '#3D3F40';
+                    senderAndTime.append(timeBox);
+
+                    // click on a users' name on a given message, their profile screen should be displayed.
+                    senderBox.addEventListener('mouseover', () => {
+                        senderBox.style.cursor = 'pointer';
+                        senderBox.style.textDecoration = 'underline';
+                    })
+                    senderBox.addEventListener('mouseout', () => {
+                        senderBox.style.textDecoration = '';
+                    })
+
+                    senderBox.addEventListener('click', () => {
+                        fetch(`http://localhost:5005/user/${messages[n]['sender']}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token,
+                            }
+                        }).then((response) => {
+                            if (response.status === 200) {
+                                response.json().then((data) => {
+                                    document.getElementById("oneUserProfileName").innerText = data['name'];
+                                    document.getElementById("oneUserBio").innerText = data['bio'];
+                                    document.getElementById("oneUserEmail").innerText = data['email'];
+                                    document.getElementById("oneUserPhoto").innerText = data['image'];
+                                    document.getElementById("oneUserProfileTitle").children[0].innerText = `${data['name']}'s profile`;
+                                    displayContentById("oneUserProfileMask");
+                                });
+                            };
+                        })
+                    });
+
 
                     const messageEditBtn = document.getElementById("messageEditBtn");
                     let newMsgEditBtn = messageEditBtn.cloneNode(true);
