@@ -103,6 +103,12 @@ li {
     font-size: 0.8em;
 }
 
+#channelsList li img {
+    width: 1.3em;
+    height: 1.3em;
+    border-radius: 0.1em;
+}
+
 
 /* current channel content */
 
@@ -164,7 +170,7 @@ li {
 }
 
 .oneMessage .messageSenderImg {
-    background-color: #838ab6;
+    /* background-color: #838ab6; */
     grid-area: 1/1/3/2;
     display: grid;
     /* align-content: flex-start; */
@@ -172,17 +178,37 @@ li {
 }
 
 .oneMessage .messageSender {
-    background-color: #9de2ac;
+    background-color: #DBF8FF;
     grid-column: 2/13;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    font-weight: bold;
+}
+
+.messageSenderImg img {
+    width: 2.5em;
+    border-radius: 0.2em;
 }
 
 .oneMessage .messageTimeStamp {
     font-size: 0.8em;
+    font-weight: initial;
 }
 
 .oneMessage .messageContent {
-    background-color: #e2afe9;
+    background-color: #DBF8FF;
     grid-column: 2/13;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.oneMessage .messageImageBox {
+    background-color: #DBF8FF;
+    grid-column: 2/13;
+}
+
+.oneMessage .messageImageBox img {
+    width: 8em;
 }
 
 .oneMessage .messageReactBar {
@@ -206,16 +232,28 @@ li {
     display: grid;
     grid-template-columns: repeat(11, 1fr) 2fr;
     grid-template-rows: 1fr 10px;
-    margin: 0px 20px;
+    margin: 0px 20px 0.5em;
     color: black;
     border: 1px solid black;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+    align-items: center;
     /* border-top: hidden; */
+}
+
+#sendPictureShow {
+    width: 8em;
+    grid-column: 1/3;
+    margin: 0 0.5em;
+}
+
+#sendPictureBtn {
+    grid-column: 3/8;
+    margin: 0 0.5em;
 }
 
 #sendMsgBtn {
     grid-column: 12/13;
     justify-self: center;
-    margin-top: 0.3em;
+    margin: 0 0.5em;
 }

@@ -4,7 +4,8 @@
 #currentChannelInfo,
 #userProfileInfo,
 #oneUserProfile,
-#promptPopupInfo {
+#promptPopupInfo,
+#messageImageEnlargeBox {
     display: grid;
     overflow: hidden;
     overflow-wrap: break-word;
@@ -155,4 +156,28 @@
 
 #memberPopup li {
     grid-template-columns: 1em 1.5em 1fr;
+}
+
+#memberPopup li img {
+    width: 1.3em;
+    height: 1.3em;
+}
+
+#messageImageBack {
+    grid-column: 1/2;
+    place-self: center;
+}
+
+#messageImageEnlarged {
+    grid-column: 2/12;
+    place-self: center;
+}
+
+#messageImageEnlarged img {
+    width: 100%;
+}
+
+#messageImageForward {
+    grid-column: 12/13;
+    place-self: center;
 }

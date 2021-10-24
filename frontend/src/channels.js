@@ -40,17 +40,6 @@ const cleanChatContentFrame = () => {
     hideContentById('pinMsgBar');
 };
 
-const insertElementInAlphabeticalOrder = (item, memberList) => {
-    let positionIndex = 0;
-    for (let n = 0; n < memberList.children.length; n++) {
-        if (allUsersInfo[item]['name'].toLowerCase() > memberList.children[n].children[2].innerText.toLowerCase()) {
-
-            positionIndex += 1;
-        }
-    };
-    (positionIndex === memberList.children.length) ? memberList.append(memberBar): memberList.insertBefore(memberBar, memberList.children[positionIndex]);
-};
-
 // Get details of the specific channel
 export const linkChannel = (id) => {
     document.getElementById(id).addEventListener('mouseover', () => {

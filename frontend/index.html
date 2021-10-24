@@ -113,9 +113,10 @@
                     <label for="userProfileInfoPassword">Password</label>
                     <span style="font-size: 0.7em; color: grey;"><input type="checkbox" name="" id="userProfileInfoPasswordToggle">tick if you want to show the password</span>
                 </div>
-                <div class="infoItem form-floating"> <input type="file" class="form-control" id="userProfileInfoImage">
-                    <label for="userProfileInfoBio">Image</label>
-                    <img src="" alt="userPhoto" id="userProfileInfoImageShow" style="max-width: 4em; margin-top: 0.5em;"></div>
+                <div class="infoItem">
+                    <label for="userProfileInfoImageShow">Image</label>
+                    <div><img src="" alt="userPhoto" id="userProfileInfoImageShow" style="max-width: 4em; margin: 0.5em;"><input type="file" id="userProfileInfoImage"></div>
+                </div>
                 <div id="userProfileUpdateBar"><button id="userProfileUpdateBtn">Update</button></div>
             </div>
         </div>
@@ -136,6 +137,15 @@
                 <p>&#128557;</p>
             </li>
         </ul>
+    </div>
+
+    <div id="messageImageEnlargeMask" class="mask">
+        <div id="messageImageEnlargeBox">
+            <div id="messageImageBack"><img src="./images/chevron-left.svg" alt="Back"></div>
+            <div id="messageImageEnlarged"><img src="" alt="messageImageEnlarged"></div>
+            <div id="messageImageForward"><img src="./images/chevron-right.svg" alt="Forward"></div>
+        </div>
+
     </div>
 
     <div id="pinEmoji" style="display: none;">&#128204;</div>
@@ -173,8 +183,8 @@
               </button>
                 <ul class="dropdown-menu">
                     <!-- Dropdown menu links -->
-                    <li id="signOutBtn"><a class="dropdown-item" href="#">Sign out</a></li>
                     <li id="userProfileBtn"><a class="dropdown-item" href="#">User profile</a></li>
+                    <li id="signOutBtn"><a class="dropdown-item" href="#">Sign out</a></li>
                     <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
                 </ul>
             </div>
@@ -205,13 +215,18 @@
                     <img class="messageSenderImg" src="./images/door-closed-fill.svg" alt="">
                     <span class="messageSender">dssd<span class="messageTimeStamp">dds</span></span>
                     <span class="messageContent">sdd</span>
+                    <span class="messageImageBox"><img  class="messageImage" src="" alt=""></span>
+                    <img  class="messageImage" src="" alt="">
                     <span class="messageReactBar"></span>
                 </div> -->
+                <img src="" alt="">
 
             </div>
 
             <div id="currentChannelInput" contenteditable="true"></div>
             <div id="currentChannelInputTackle">
+                <img id="sendPictureShow" src="" alt="imageSend" style="width: 3em;">
+                <input type="file" name="" id="sendPictureBtn">
                 <button id="sendMsgBtn" type="button" class="btn btn-success">Send</button>
             </div>
 

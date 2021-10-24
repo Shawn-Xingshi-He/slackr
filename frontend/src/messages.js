@@ -1,5 +1,7 @@
 import { allUsersInfo } from "./users.js";
 import { displayContentById } from "./utility.js";
+import { fileToDataUrl } from './helpers.js';
+
 
 const userId = localStorage.getItem('userId');
 
@@ -23,6 +25,7 @@ export const timeStampSwitch = (time) => {
 
 }
 
+//refresh current channel content
 export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
     let requestOptions = {
         method: 'GET',
@@ -46,8 +49,8 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     chat.className = 'oneMessage';
                     // console.log(messages[n]['sender']);
                     // console.log(allUsersInfo);
-                    // console.log(allUsersInfo[messages[n]['sender']]);
 
+                    // append the sender&timestamp box
                     const senderName = allUsersInfo[messages[n]['sender']]['name'];
                     const senderBox = createBox('span', '', `${senderName}`);
                     const senderAndTime = createBox('span', 'messageSender', '');
@@ -57,6 +60,15 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     timeBox.style.fontSize = '0.8em';
                     timeBox.style.color = '#3D3F40';
                     senderAndTime.append(timeBox);
+
+                    const messageEditBtn = document.getElementById("messageEditBtn");
+                    let newMsgEditBtn = messageEditBtn.cloneNode(true);
+                    // console.log('newMsgEditBtn', newMsgEditBtn);
+                    newMsgEditBtn.style.display = 'block';
+                    newMsgEditBtn.style.float = 'right';
+                    senderAndTime.append(newMsgEditBtn);
+                    chat.append(senderAndTime);
+
 
                     // click on a users' name on a given message, their profile screen should be displayed.
                     senderBox.addEventListener('mouseover', () => {
@@ -88,13 +100,6 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                         })
                     });
 
-
-                    const messageEditBtn = document.getElementById("messageEditBtn");
-                    let newMsgEditBtn = messageEditBtn.cloneNode(true);
-                    // console.log('messageEditBtn', messageEditBtn);
-                    // console.log('newMsgEditBtn', newMsgEditBtn);
-                    newMsgEditBtn.style.display = 'block';
-                    newMsgEditBtn.style.float = 'right';
 
                     // edit a message
                     const editMessage = newMsgEditBtn.children[1].children[0];
@@ -218,7 +223,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                             newPin.id = `pin${messages[n]['id']}`;
                             newPin.style.display = 'block';
                             // console.log(seletedMsg.children[3]);
-                            seletedMsg.children[3].append(newPin);
+                            seletedMsg.children[4].append(newPin);
                             pinMessage.children[0].innerText = 'Un-pin from channel';
 
                             fetch(`http://localhost:5005/message/pin/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
@@ -235,7 +240,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                             seletedMsg.style.backgroundColor = '';
                             // console.log(seletedMsg.children[3]);
                             // console.log(document.getElementById(`pin${messages[n]['id']}`));
-                            seletedMsg.children[3].removeChild(seletedMsg.children[3].children[1]);
+                            seletedMsg.children[4].removeChild(seletedMsg.children[4].children[1]);
                             pinMessage.children[0].innerText = 'Pin to channel';
                             fetch(`http://localhost:5005/message/unpin/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
                                 if (response.status === 200) {
@@ -257,11 +262,11 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                             let seletedMsg = document.getElementById(messages[n]['id']);
                             let emojiExist = false;
                             let allReactsAfterUnreact = '';
-                            for (let k = 0; k < seletedMsg.children[2].innerText.split(' ').length; k++) {
-                                if (seletedMsg.children[2].innerText.split(' ')[k] === reactMessages[m].innerText) {
+                            for (let k = 0; k < seletedMsg.children[3].innerText.split(' ').length; k++) {
+                                if (seletedMsg.children[3].innerText.split(' ')[k] === reactMessages[m].innerText) {
                                     emojiExist = true;
                                 } else {
-                                    allReactsAfterUnreact += ` ${seletedMsg.children[2].innerText.split(' ')[k]}`;
+                                    allReactsAfterUnreact += ` ${seletedMsg.children[3].innerText.split(' ')[k]}`;
                                 }
                             };
                             // console.log(b.match('\u{1F44D}'));
@@ -278,7 +283,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                                     }),
                                 }).then((response) => {
                                     if (response.status === 200) {
-                                        seletedMsg.children[2].innerText += ` ${reactMessages[m].innerText}`;
+                                        seletedMsg.children[3].innerText += ` ${reactMessages[m].innerText}`;
                                         // alert("reactMessage succeeded...");
                                     } else { alert("reactMessage failed..."); }
                                 });
@@ -294,7 +299,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                                     }),
                                 }).then((response) => {
                                     if (response.status === 200) {
-                                        seletedMsg.children[2].innerText = allReactsAfterUnreact;
+                                        seletedMsg.children[3].innerText = allReactsAfterUnreact;
                                     } else {
                                         alert("unreactMessage failed...");
                                     };
@@ -304,6 +309,33 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                         })
                     };
 
+                    // append the message(text) box
+                    chat.append(createBox('span', 'messageContent', messages[n]['message']));
+                    let tempReact = '';
+                    for (let m = 0; m < messages[n]['reacts'].length; m++) {
+                        tempReact += ` ${messages[n]['reacts'][m]['react']}`;
+                    };
+
+                    // append the message(image) box
+                    const messageImageBox = createBox('span', 'messageImageBox', tempReact);
+                    const messageImage = document.createElement('img');
+                    messageImage.src = messages[n]['image'];
+                    messageImageBox.append(messageImage);
+                    chat.append(messageImageBox);
+
+
+                    messageImage.addEventListener('mouseover', () => {
+                        messageImage.style.cursor = 'pointer';
+                    });
+                    messageImage.addEventListener('click', () => {
+                        document.getElementById('messageImageEnlarged').firstChild.src = messageImage.src;
+                        displayContentById('messageImageEnlargeMask');
+
+                    });
+
+
+
+                    chat.append(createBox('span', 'messageReactBar', tempReact));
 
                     const imgBox = createBox('div', 'messageSenderImg', '');
                     const img = document.createElement('img');
@@ -321,18 +353,6 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     } else {
                         newMsgEditBtn.children[1].children[2].children[0].innerText = 'Pin to channel';
                     }
-                    senderAndTime.append(newMsgEditBtn);
-                    // console.log(prime);
-                    chat.append(senderAndTime);
-                    chat.append(createBox('span', 'messageContent', messages[n]['message']));
-                    let tempReact = '';
-                    for (let m = 0; m < messages[n]['reacts'].length; m++) {
-                        tempReact += ` ${messages[n]['reacts'][m]['react']}`;
-                    };
-                    chat.append(createBox('span', 'messageReactBar', tempReact));
-
-                    // if ()
-
                     chat.append(imgBox);
 
                     if (messages[n]['pinned'] === true) {
@@ -352,38 +372,60 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
     });
 }
 
+// send a picture
+document.getElementById('sendPictureBtn').addEventListener('change', () => {
+
+    const file = document.getElementById('sendPictureBtn').files[0];
+    fileToDataUrl(file).then(data => { document.getElementById('sendPictureShow').src = data; });
+});
+console.log(document.getElementById('sendPictureShow').src);
+console.log(document.getElementById('sendPictureShow').src);
+console.log(document.getElementById('sendPictureShow').src == '');
+console.log(document.getElementById('sendPictureShow').src == undefined);
+
+// send a message
 document.getElementById('sendMsgBtn').addEventListener('click', () => {
     const msgContent = document.getElementById('currentChannelInput').innerText;
-    console.log(msgContent);
+    let imgContent = '';
+    // console.log(msgContent);
     if (msgContent.match(/^\s*$/)) {
         console.log(false);
-    } else {
-        const token = localStorage.getItem('token');
-        const currentChannelId = localStorage.getItem('currentChannelId');
-        // console.log('currentChannelId',currentChannelId);
-        const msgInfo = JSON.stringify({
-            message: msgContent,
-            image: '',
-        });
+        if (document.getElementById('sendPictureShow').src.match(/^data:image\/.+/)) {
 
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-            body: msgInfo,
-        };
 
-        fetch(`http://localhost:5005/message/${currentChannelId}`, requestOptions).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    document.getElementById('currentChannelInput').innerText = '';
-                    refreshCurrentChannelMsg(currentChannelId, token, allUsersInfo);
-                });
-            } else {
-                alert("sendMessage failed...");
-            }
-        });
+            // console.log('there is a picture!!!');
+            // console.log('srcreal!!!!', document.getElementById('sendPictureShow').src);
+
+            imgContent = document.getElementById('sendPictureShow').src;
+        }
     }
+    const token = localStorage.getItem('token');
+    const currentChannelId = localStorage.getItem('currentChannelId');
+    // console.log('currentChannelId',currentChannelId);
+    const msgInfo = JSON.stringify({
+        message: msgContent,
+        image: imgContent,
+    });
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+        },
+        body: msgInfo,
+    };
+
+    fetch(`http://localhost:5005/message/${currentChannelId}`, requestOptions).then((response) => {
+        if (response.status === 200) {
+            response.json().then((data) => {
+                document.getElementById('currentChannelInput').innerText = '';
+                document.getElementById('sendPictureShow').src = '';
+                refreshCurrentChannelMsg(currentChannelId, token, allUsersInfo);
+            });
+        } else {
+            alert("sendMessage failed...");
+        }
+    });
+
 })

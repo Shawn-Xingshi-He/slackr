@@ -27,11 +27,13 @@ const getOneUserInfo = (userId, token) => {
                 const userBar = document.createElement('li');
                 const userBox = document.createElement('span');
                 userBar.id = `user${userId}`;
+                const userImageBox = document.createElement('span');
                 const userimage = document.createElement('img');
                 userBox.innerText = data['name'];
                 // nonMemberListIDs.push(channel);
                 (data['image']) ? userimage.src = data['image']: userimage.src = '../images/person-square.svg';
-                userBar.append(userimage);
+                userImageBox.append(userimage);
+                userBar.append(userImageBox);
                 userBar.append(userBox);
 
                 userBar.addEventListener('mouseover', () => {
@@ -124,16 +126,15 @@ document.getElementById('userProfileBtn').addEventListener('click', () => {
                 document.getElementById('userProfileInfoBio').value = data['bio'];
                 document.getElementById('userProfileInfoEmail').value = data['email'];
                 document.getElementById('userProfileInfoPassword').value = password;
-                document.getElementById('userProfileInfoImage').value = data['image'];
                 document.getElementById('userProfileInfoImageShow').src = data['image'];
 
+                document.getElementById('userProfileInfoImage').addEventListener('change', () => {
 
-                document.getElementById('userProfileInfoPasswordToggle').addEventListener('click', () => {
-                    if (document.getElementById('userProfileInfoPasswordToggle').checked === true) {
-                        document.getElementById('userProfileInfoPassword').type = 'text';
-                    } else {
-                        document.getElementById('userProfileInfoPassword').type = 'Password';
-                    };
+                    const file = document.getElementById('userProfileInfoImage').files[0];
+                    console.log(document.getElementById('userProfileInfoImage').files[0]['name']);
+                    fileToDataUrl(file).then(data => {
+                        document.getElementById('userProfileInfoImageShow').src = data;
+                    });
                 });
             });
         } else {
@@ -141,24 +142,23 @@ document.getElementById('userProfileBtn').addEventListener('click', () => {
         };
     });
     console.log(document.getElementById('userProfileInfoImage'));
-
-    document.getElementById('userProfileInfoImage').addEventListener('change', () => {
-
-        const file = document.getElementById('userProfileInfoImage').files[0];
-        console.log(document.getElementById('userProfileInfoImage').files[0]['name']);
-        fileToDataUrl(file).then(data => {
-            document.getElementById('userProfileInfoImageShow').src = data;
-        });
-    });
-
-
 });
+
+document.getElementById('userProfileInfoPasswordToggle').addEventListener('click', () => {
+    if (document.getElementById('userProfileInfoPasswordToggle').checked === true) {
+        document.getElementById('userProfileInfoPassword').type = 'text';
+    } else {
+        document.getElementById('userProfileInfoPassword').type = 'Password';
+    };
+});
+
+
 
 document.getElementById('userProfileUpdateBtn').addEventListener('click', () => {
     const newEmail = document.getElementById('userProfileInfoEmail').value;
     const newName = document.getElementById('userProfileInfoName').value;
     const newBio = document.getElementById('userProfileInfoBio').value;
-    const newImage = document.getElementById('userProfileInfoImage').value;
+    const newImage = document.getElementById('userProfileInfoImageShow').src;
     const newPassword = document.getElementById('userProfileInfoPassword').value;
 
     const userId = localStorage.getItem('userId');
