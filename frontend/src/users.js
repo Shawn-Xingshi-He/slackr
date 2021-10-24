@@ -1,3 +1,4 @@
+import { BACKEND_PORT } from './config.js';
 import { hideContentById, hideContentByClass, displayContentById } from "./utility.js";
 import { itemExistInArray, closePopupForm, openChannels } from './channels.js';
 import { fileToDataUrl } from './helpers.js';
@@ -10,7 +11,7 @@ export const updateInfoPopup = (info) => {
 
 export let allUsersInfo = new Object();
 const getOneUserInfo = (userId, token) => {
-    fetch(`http://localhost:5005/user/${userId}`, {
+    fetch(`http://localhost:${BACKEND_PORT}/user/${userId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -77,7 +78,7 @@ export const getAllUsers = (token) => {
     // const token = localStorage.getItem('token');
     // let currentChannelMembers = localStorage.getItem('currentChannelMembers').split(',');
     // const channelId = localStorage.getItem('channelId');
-    fetch(`http://localhost:5005/user`, {
+    fetch(`http://localhost:${BACKEND_PORT}/user`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -112,7 +113,7 @@ document.getElementById('userProfileBtn').addEventListener('click', () => {
     // console.log(userId);
     // console.log(allUsersInfo);
 
-    fetch(`http://localhost:5005/user/${userId}`, {
+    fetch(`http://localhost:${BACKEND_PORT}/user/${userId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -186,7 +187,7 @@ document.getElementById('userProfileUpdateBtn').addEventListener('click', () => 
             body: userProfileUpdateInfo,
         }
 
-        fetch('http://localhost:5005/user', requestOptions).then((response) => {
+        fetch(`http://localhost:${BACKEND_PORT}/user`, requestOptions).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
                     // closePopupForm();

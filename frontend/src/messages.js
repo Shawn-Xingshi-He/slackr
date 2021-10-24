@@ -36,7 +36,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
             'Authorization': 'Bearer ' + token,
         }
     };
-    fetch(`http://localhost:5005/message/${id}?start=0`, requestOptions).then((response) => {
+    fetch(`http://localhost:${BACKEND_PORT}/message/${id}?start=0`, requestOptions).then((response) => {
         if (response.status === 200) {
             response.json().then((data) => {
                 // console.log(data);
@@ -91,7 +91,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     })
 
                     senderBox.addEventListener('click', () => {
-                        fetch(`http://localhost:5005/user/${messages[n]['sender']}`, {
+                        fetch(`http://localhost:${BACKEND_PORT}/user/${messages[n]['sender']}`, {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                                         },
                                         body: editInfo,
                                     };
-                                    fetch(`http://localhost:5005/message/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
+                                    fetch(`http://localhost:${BACKEND_PORT}/message/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
                                         if (response.status === 200) {
                                             response.json().then((data) => {
                                                 for (let m = 0; m < editBtns.length; m++) { editBtns[m].disabled = false; };
@@ -204,7 +204,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                             }
                         };
 
-                        fetch(`http://localhost:5005/message/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
+                        fetch(`http://localhost:${BACKEND_PORT}/message/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
                             if (response.status === 200) {
                                 response.json().then((data) => {
                                     const currentChannelId = localStorage.getItem('currentChannelId');
@@ -240,7 +240,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                             seletedMsg.children[4].append(newPin);
                             pinMessage.children[0].innerText = 'Un-pin from channel';
 
-                            fetch(`http://localhost:5005/message/pin/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
+                            fetch(`http://localhost:${BACKEND_PORT}/message/pin/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
                                 if (response.status === 200) {
                                     response.json().then((data) => {
                                         console.log("pinMessage succeed!!!")
@@ -256,7 +256,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                             // console.log(document.getElementById(`pin${messages[n]['id']}`));
                             seletedMsg.children[4].removeChild(seletedMsg.children[4].children[1]);
                             pinMessage.children[0].innerText = 'Pin to channel';
-                            fetch(`http://localhost:5005/message/unpin/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
+                            fetch(`http://localhost:${BACKEND_PORT}/message/unpin/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
                                 if (response.status === 200) {
                                     response.json().then((data) => {
                                         console.log("unpinMessage succeed!!!")
@@ -286,7 +286,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                             // console.log(b.match('\u{1F44D}'));
                             // throw 100;
                             if (!emojiExist) {
-                                fetch(`http://localhost:5005/message/react/${id}/${messages[n]['id']}`, {
+                                fetch(`http://localhost:${BACKEND_PORT}/message/react/${id}/${messages[n]['id']}`, {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
@@ -302,7 +302,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                                     } else { alert("reactMessage failed..."); }
                                 });
                             } else {
-                                fetch(`http://localhost:5005/message/unreact/${id}/${messages[n]['id']}`, {
+                                fetch(`http://localhost:${BACKEND_PORT}/message/unreact/${id}/${messages[n]['id']}`, {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
@@ -469,7 +469,7 @@ document.getElementById('sendMsgBtn').addEventListener('click', () => {
         body: msgInfo,
     };
 
-    fetch(`http://localhost:5005/message/${currentChannelId}`, requestOptions).then((response) => {
+    fetch(`http://localhost:${BACKEND_PORT}/message/${currentChannelId}`, requestOptions).then((response) => {
         if (response.status === 200) {
             response.json().then((data) => {
                 document.getElementById('currentChannelInput').innerText = '';

@@ -32,7 +32,7 @@ document.getElementById('loginBtn').addEventListener('click', () => {
         body: loginInfo,
     }
 
-    fetch('http://localhost:5005/auth/login', requestOptions).then((response) => {
+    fetch(`http://localhost:${BACKEND_PORT}/auth/login`, requestOptions).then((response) => {
         if (response.status === 200) {
             hideContentById('loginError');
             console.log('Login succeeded!');
@@ -52,7 +52,7 @@ document.getElementById('loginBtn').addEventListener('click', () => {
 // sign out
 document.getElementById('signOutBtn').addEventListener('click', () => {
     const token = localStorage.getItem('token');
-    fetch('http://localhost:5005/auth/logout', {
+    fetch(`http://localhost:${BACKEND_PORT}/auth/logout`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ document.getElementById('registerBtn').addEventListener('click', () => {
 
     if (password === confirmPassword) {
         hideContentById('registerError');
-        fetch('http://localhost:5005/auth/register', requestOptions).then((response) => {
+        fetch(`http://localhost:${BACKEND_PORT}/auth/register`, requestOptions).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
                     console.log(data);

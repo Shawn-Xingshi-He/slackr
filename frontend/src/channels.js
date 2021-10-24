@@ -1,3 +1,4 @@
+import { BACKEND_PORT } from './config.js';
 import { hideContentById, hideContentByClass, displayContentById } from "./utility.js";
 import { timeStampSwitch, refreshCurrentChannelMsg, cleanAllChildren } from "./messages.js";
 import { getAllUsers, allUsersInfo, updateInfoPopup } from "./users.js";
@@ -61,7 +62,7 @@ export const linkChannel = (id) => {
                 'Authorization': 'Bearer ' + token,
             }
         };
-        fetch(`http://localhost:5005/channel/${id}`, requestOptions).then((response) => {
+        fetch(`http://localhost:${BACKEND_PORT}/channel/${id}`, requestOptions).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
                     console.log(data);
@@ -175,7 +176,7 @@ document.getElementById('updateChannelInfo').addEventListener('click', () => {
             body: channelUpdateInfo,
         }
 
-        fetch(`http://localhost:5005/channel/${ChannelId}`, requestOptions).then((response) => {
+        fetch(`http://localhost:${BACKEND_PORT}/channel/${ChannelId}`, requestOptions).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
                     localStorage.setItem('currentChannelName', newChannelName);
@@ -215,7 +216,7 @@ document.getElementById('addMemberBtn').addEventListener('click', () => {
                 body: addedUserInfo,
             }
 
-            fetch(`http://localhost:5005/channel/${ChannelId}/invite`, requestOptions).then((response) => {
+            fetch(`http://localhost:${BACKEND_PORT}/channel/${ChannelId}/invite`, requestOptions).then((response) => {
                 if (response.status === 200) {
                     response.json().then((data) => {
                         console.log('Invited one user successfully!!!');
@@ -252,7 +253,7 @@ document.getElementById('addMemberBtn').addEventListener('click', () => {
 document.getElementById('confirmPopupBtn').addEventListener('click', () => {
     const channelWantToJoinId = localStorage.getItem('channelWantToJoinId');
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:5005/channel/${channelWantToJoinId}/join`, {
+    fetch(`http://localhost:${BACKEND_PORT}/channel/${channelWantToJoinId}/join`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -296,7 +297,7 @@ document.getElementById('currentChannelInfoLeave').addEventListener('click', () 
     const currentChannelId = localStorage.getItem('currentChannelId');
     const token = localStorage.getItem('token');
     console.log(currentChannelId);
-    fetch(`http://localhost:5005/channel/${currentChannelId}/leave`, {
+    fetch(`http://localhost:${BACKEND_PORT}/channel/${currentChannelId}/leave`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -359,7 +360,7 @@ const showAllChannels = (data) => {
 }
 
 export const openChannels = (token) => {
-    fetch('http://localhost:5005/channel', {
+    fetch(`http://localhost:${BACKEND_PORT}/channel`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -411,7 +412,7 @@ document.getElementById('createChannelBtn').addEventListener('click', () => {
         body: newChannelInfo,
     }
 
-    fetch('http://localhost:5005/channel', requestOptions).then((response) => {
+    fetch(`http://localhost:${BACKEND_PORT}/channel`, requestOptions).then((response) => {
         if (response.status === 200) {
             document.getElementById('newChannelName').value = '';
             document.getElementById('newChannelDescription').value = '';
