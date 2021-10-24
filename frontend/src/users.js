@@ -1,9 +1,9 @@
 import { hideContentById, hideContentByClass, displayContentById } from "./utility.js";
-import { itemExistInArray, closePopupForm } from './channels.js';
+import { itemExistInArray, closePopupForm, openChannels } from './channels.js';
 import { fileToDataUrl } from './helpers.js';
 
 
-export const prompt = (info) => {
+export const updateInfoPopup = (info) => {
     document.getElementById('promptContent').innerText = info;
     displayContentById('promptPopup');
 };
@@ -131,7 +131,6 @@ document.getElementById('userProfileBtn').addEventListener('click', () => {
                 document.getElementById('userProfileInfoPasswordToggle').addEventListener('click', () => {
                     if (document.getElementById('userProfileInfoPasswordToggle').checked === true) {
                         document.getElementById('userProfileInfoPassword').type = 'text';
-                        console.log('nihao');
                     } else {
                         document.getElementById('userProfileInfoPassword').type = 'Password';
                     };
@@ -166,7 +165,7 @@ document.getElementById('userProfileUpdateBtn').addEventListener('click', () => 
     if (newEmail === allUsersInfo[userId]['email'] && newName === allUsersInfo[userId]['name'] &&
         newBio === allUsersInfo[userId]['bio'] && newImage === allUsersInfo[userId]['image'] &&
         newPassword === localStorage.getItem('password')) {
-        prompt("Nothing changed!!! Try again!!!")
+        updateInfoPopup("Nothing changed!!! Try again!!!");
     } else {
         const userProfileUpdateInfo = JSON.stringify({
             email: newEmail,
@@ -196,7 +195,8 @@ document.getElementById('userProfileUpdateBtn').addEventListener('click', () => 
                     allUsersInfo[userId]['bio'] = newBio;
                     allUsersInfo[userId]['image'] = newImage;
                     localStorage.setItem('password', newPassword);
-                    prompt("Update user's own profile successfully!!!");
+                    updateInfoPopup("Update user's own profile successfully!!!");
+                    openChannels(token);
                     console.log("Update user's own profile successfully!!!");
                 });
             } else {

@@ -17,10 +17,13 @@
 
 <body>
     <!-- This is an example app structure, you can modify this as much as you choose -->
+    <!-- popup screens -->
     <div id="promptPopup" class="mask" style="z-index: 3;">
-        <div class="popupTitleBar">
-            <span class="popupTitle"></span> <img class="closePopupBtn" src="./images/x-square.svg" alt="close"></div>
-        <div id="promptContent" class="popupContentBar"></div>
+        <div id="promptPopupInfo">
+            <div class="popupTitleBar">
+                <span class="popupTitle"></span> <img class="closePopupBtn" src="./images/x-square.svg" alt="close"></div>
+            <div id="promptContent" class="popupContentBar"></div>
+        </div>
     </div>
 
     <div id="oneUserProfileMask" class="mask">
@@ -58,19 +61,26 @@
 
     <div id="currentChannelInfoMask" class="mask">
         <div id="currentChannelInfo">
-            <div id="currentChannelInfoTitle" class="popupTitleBar"><span class="popupTitle"></span> <img class="closePopupBtn" src="./images/x-square.svg" alt="close"></div>
+            <div id="currentChannelInfoTitle" class="popupTitleBar"><span class="popupTitle">Channel Information</span> <img class="closePopupBtn" src="./images/x-square.svg" alt="close"></div>
             <div id="currentChannelContent" class="popupContentBar">
-                <div id="currentChannelInfoName" class="infoItem">Channel name <br><span></span> </div>
-                <div id="currentChannelInfoDescription" class="infoItem">Description<br> <span></span></div>
+                <div class="infoItem">
+                    <label for="currentChannelInfoName">Channel name</label>
+                    <div contenteditable="true" class="form-control" id="currentChannelInfoName"></div>
+                </div>
+                <div class="infoItem">
+                    <label for="currentChannelInfoDescription">Channel description</label>
+                    <div contenteditable="true" class="form-control" id="currentChannelInfoDescription"></div>
+                </div>
+                <div id="currentChannelInfoPrivate" class="infoItem">Public/Private status<br> <span></span></div>
                 <div id="currentChannelInfoCreatorAndTime" class="infoItem">Created by<br> <span></span></div>
-                <div id="currentChannelInfoLeaveBar"><button id="currentChannelInfoLeave">Leave channel</button></div>
+                <div id="currentChannelInfoBtnBar" class="infoItem"><button id="updateChannelInfo">Update Info</button> <button id="currentChannelInfoLeave">Leave channel</button></div>
             </div>
         </div>
     </div>
 
     <div id="confirmPopupMask" class="mask">
         <div id="confirmPopup">
-            <div id="confirmPopupPrompt"></div>
+            <div class="popupTitleBar"><span class="popupTitle" id="confirmPopupPrompt"></span> <img class="closePopupBtn" src="./images/x-square.svg" alt="close"></div>
             <div id="confirmPopupBtnBox"><button id="confirmPopupBtn">Yes</button></div>
         </div>
     </div>
@@ -85,12 +95,13 @@
             <ul id='memberList'></ul>
             <div class="mebemberType">Other Users (Not Members)</div>
             <ul id='nonMemberList'></ul>
+            <button id="addMemberBtn">Add members</button>
         </div>
     </div>
 
     <div id="userProfileMask" class="mask">
         <div id="userProfileInfo">
-            <div id="userProfileInfoTitleTitle" class="popupTitleBar"><span class="popupTitle"></span> <img class="closePopupBtn" src="./images/x-square.svg" alt="close"></div>
+            <div id="userProfileInfoTitle" class="popupTitleBar"><span class="popupTitle">User Profile</span> <img class="closePopupBtn" src="./images/x-square.svg" alt="close"></div>
             <div id="userProfileContent" class="popupContentBar">
                 <div class="infoItem form-floating"><input type="text" class="form-control" id="userProfileInfoName">
                     <label for="userProfileInfoName">Name</label></div>
@@ -100,7 +111,7 @@
                     <label for="userProfileInfoEmail">Email</label></div>
                 <div class="infoItem form-floating"><input type="Password" class="form-control" id="userProfileInfoPassword">
                     <label for="userProfileInfoPassword">Password</label>
-                    <span style="font-size: 0.5em; color: grey;"><input type="checkbox" name="" id="userProfileInfoPasswordToggle">tick if you want to show the password</span>
+                    <span style="font-size: 0.7em; color: grey;"><input type="checkbox" name="" id="userProfileInfoPasswordToggle">tick if you want to show the password</span>
                 </div>
                 <div class="infoItem form-floating"> <input type="file" class="form-control" id="userProfileInfoImage">
                     <label for="userProfileInfoBio">Image</label>
@@ -156,7 +167,7 @@
     <div id="channels">
         <header>
             <div id="headerLogo">Slackr</div>
-            <div class="btn-group dropstart">
+            <div id="headerUserIconBox" class="btn-group dropstart">
                 <button id="headerUserIcon" type="button" class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="./images/person-circle.svg" alt="">
               </button>

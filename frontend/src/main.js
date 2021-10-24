@@ -40,7 +40,7 @@ document.getElementById('loginBtn').addEventListener('click', () => {
                 localStorage.setItem('userId', data['userId']);
                 localStorage.setItem('token', data['token']);
                 localStorage.setItem('password', password);
-                console.log('loginUserId', localStorage.getItem('userId'));
+                // console.log('loginUserId', localStorage.getItem('userId'));
                 openChannels(data['token']);
             })
         } else if (response.status === 400) {

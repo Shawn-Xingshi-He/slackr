@@ -3,7 +3,8 @@
 #createChannelForm,
 #currentChannelInfo,
 #userProfileInfo,
-#oneUserProfile {
+#oneUserProfile,
+#promptPopupInfo {
     display: grid;
     overflow: hidden;
     overflow-wrap: break-word;
@@ -50,9 +51,15 @@
     border-bottom-right-radius: 10px;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(3, 4fr) 2fr 1fr;
     gap: 10px 0;
     overflow-y: scroll;
+}
+
+#promptContent {
+    grid-template-columns: 1fr;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    margin: 1em;
 }
 
 #createChannelContent::-webkit-scrollbar,
@@ -74,13 +81,21 @@
     font-weight: lighter;
 }
 
-#currentChannelInfoLeaveBar,
+#currentChannelInfoBtnBar {
+    grid-template-columns: 1fr 1fr;
+}
+
+#currentChannelInfoBtnBar,
 #createChannelBtnBar,
 #userProfileUpdateBar {
     grid-column: 2/12;
     place-items: center;
     display: grid;
-    /* margin-bottom: 10px; */
+    margin-bottom: 1em;
+}
+
+#currentChannelInfoBtnBar {
+    grid-template-columns: repeat(2, 1fr);
 }
 
 #createChannelBtn {
@@ -100,24 +115,19 @@
 #confirmPopup {
     display: grid;
     z-index: 1;
-    /* overflow: hidden; */
-    width: 400px;
-    height: 125px;
+    overflow-wrap: break-word;
+    max-width: 600px;
+    margin: 0 3em;
     border-radius: 10px;
     background-color: rgb(231, 231, 231);
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(2, 1fr);
     gap: 10px 0;
-}
-
-#confirmPopupPrompt {
-    grid-column: 2/12;
-    background-color: green;
+    color: black;
 }
 
 #confirmPopupBtnBox {
     grid-column: 2/12;
-    background-color: red;
     display: grid;
     place-items: center;
 }
@@ -130,7 +140,7 @@
     overflow-y: scroll;
     overflow-wrap: break-word;
     display: grid;
-    width: 100%;
+    max-width: 600px;
     padding: 1em 2em;
     background-color: #4AA3F7;
     border-radius: 0.5em;
@@ -141,4 +151,8 @@
 
 #memberPopup::-webkit-scrollbar {
     width: 0;
+}
+
+#memberPopup li {
+    grid-template-columns: 1em 1.5em 1fr;
 }

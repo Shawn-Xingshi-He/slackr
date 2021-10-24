@@ -10,6 +10,12 @@ const createBox = (boxType, givenClass, message) => {
     return box;
 }
 
+export const cleanAllChildren = (elementId) => {
+    const element = document.getElementById(elementId);
+    while (element.hasChildNodes()) { element.removeChild(element.lastChild); };
+};
+
+
 export const timeStampSwitch = (time) => {
     let re = time.match(/^(.*)T(\d*:\d*):/);
     // console.log(re);
@@ -30,14 +36,10 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
             response.json().then((data) => {
                 // console.log(data);
                 let messages = data['messages'];
-                const currentChannelChatBox = document.getElementById('currentChannelChatBox');
-                while (currentChannelChatBox.hasChildNodes()) {
-                    currentChannelChatBox.removeChild(currentChannelChatBox.lastChild);
-                };
-                const pinPopup = document.getElementById('pinPopup')
-                while (pinPopup.hasChildNodes()) {
-                    pinPopup.removeChild(pinPopup.lastChild);
-                };
+
+                cleanAllChildren('currentChannelChatBox');
+                cleanAllChildren('pinPopup');
+
                 for (let n = 0; n < messages.length; n++) {
                     const chat = document.createElement('div');
                     chat.id = messages[n]['id'];
@@ -305,7 +307,8 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
 
                     const imgBox = createBox('div', 'messageSenderImg', '');
                     const img = document.createElement('img');
-                    img.src = '../images/person-lines-fill.svg';
+                    (allUsersInfo[messages[n]['sender']]['image']) ? img.src = allUsersInfo[messages[n]['sender']]['image']:
+                        img.src = '../images/person-lines-fill.svg';;
                     imgBox.append(img);
                     // console.log(messages[n]['pinned']);
                     if (messages[n]['pinned'] === true) {

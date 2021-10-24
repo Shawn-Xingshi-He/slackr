@@ -52,10 +52,18 @@ main {
 
 #headerLogo {
     grid-column: 1/2;
+    margin: 0 0.5em;
 }
 
 #channels header .btn-group {
     grid-column: 12/13;
+    justify-self: right;
+    margin: 0 1em;
+}
+
+#headerUserIconBox {
+    justify-self: right;
+    margin: 0 1em;
 }
 
 #headerUserIcon {
@@ -124,7 +132,9 @@ li {
 #channelMembers {
     background-color: cornsilk;
     grid-area: 1/12/2/13;
-    padding: 5px;
+    justify-self: right;
+    padding: 0.2em;
+    margin: 0 1em;
     border-radius: 2px;
 }
 
