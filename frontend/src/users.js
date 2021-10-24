@@ -1,6 +1,6 @@
 import { BACKEND_PORT } from './config.js';
-import { hideContentById, hideContentByClass, displayContentById } from "./utility.js";
-import { itemExistInArray, closePopupForm, openChannels } from './channels.js';
+import { displayContentById } from "./utility.js";
+import { openChannels } from './channels.js';
 import { fileToDataUrl } from './helpers.js';
 
 

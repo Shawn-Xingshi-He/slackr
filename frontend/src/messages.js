@@ -1,9 +1,10 @@
+import { BACKEND_PORT } from './config.js';
 import { allUsersInfo } from "./users.js";
 import { displayContentById } from "./utility.js";
 import { fileToDataUrl } from './helpers.js';
 
 
-const userId = localStorage.getItem('userId');
+// const userId = localStorage.getItem('userId');
 
 const createBox = (boxType, givenClass, message) => {
     const box = document.createElement(boxType);
