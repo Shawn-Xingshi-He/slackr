@@ -16,19 +16,16 @@ const closePopupBtns = document.getElementsByClassName('closePopupBtn');
 for (let n = 0; n < closePopupBtns.length; n++) {
     closePopupBtns[n].addEventListener('click', closePopupForm);
 }
-document.getElementById('createChannelForm').addEventListener('click', (e) => {
-    e.stopPropagation();
-})
-document.getElementById('currentChannelInfo').addEventListener('click', (e) => {
-    e.stopPropagation();
-})
-document.getElementById('userProfileInfo').addEventListener('click', (e) => {
-    e.stopPropagation();
-})
+const stopPropagationFuc = (elementId) => {
+    document.getElementById(elementId).addEventListener('click', (e) => { e.stopPropagation() });
+};
 
-document.getElementById('memberPopup').addEventListener('click', (e) => {
-    e.stopPropagation();
-})
+stopPropagationFuc('createChannelForm');
+stopPropagationFuc('currentChannelInfo');
+stopPropagationFuc('userProfileInfo');
+stopPropagationFuc('memberPopup');
+stopPropagationFuc('messageImageEnlargeBox');
+
 
 // clean the channel content space
 const cleanChatContentFrame = () => {
@@ -416,6 +413,9 @@ document.getElementById('createChannelBtn').addEventListener('click', () => {
 
     fetch('http://localhost:5005/channel', requestOptions).then((response) => {
         if (response.status === 200) {
+            document.getElementById('newChannelName').value = '';
+            document.getElementById('newChannelDescription').value = '';
+            document.getElementById('makePrivate').checked = false;
             closePopupForm();
             response.json().then((data) => {
                 console.log(data);

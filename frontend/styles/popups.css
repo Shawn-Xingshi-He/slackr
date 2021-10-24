@@ -181,3 +181,8 @@
     grid-column: 12/13;
     place-self: center;
 }
+
+#messageImageBack img,
+#messageImageForward img {
+    padding: 1em;
+}

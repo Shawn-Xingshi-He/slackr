@@ -20,10 +20,12 @@ export const cleanAllChildren = (elementId) => {
 
 export const timeStampSwitch = (time) => {
     let re = time.match(/^(.*)T(\d*:\d*):/);
-    // console.log(re);
     return re;
 
 }
+
+const photos = new Array();
+let currentPhotoId = 0;
 
 //refresh current channel content
 export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
@@ -43,6 +45,9 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                 cleanAllChildren('currentChannelChatBox');
                 cleanAllChildren('pinPopup');
 
+                photos.splice(0, photos.length);
+                let currentPhotoId = 0;
+
                 for (let n = 0; n < messages.length; n++) {
                     const chat = document.createElement('div');
                     chat.id = messages[n]['id'];
@@ -54,11 +59,17 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     const senderName = allUsersInfo[messages[n]['sender']]['name'];
                     const senderBox = createBox('span', '', `${senderName}`);
                     const senderAndTime = createBox('span', 'messageSender', '');
-                    senderAndTime.append(senderBox);
-                    const timeBox = createBox('span', 'messageTimeStamp', ' ' + timeStampSwitch(messages[n]['sentAt'])[1] +
-                        ' ' + timeStampSwitch(messages[n]['sentAt'])[2]);
+
+                    const timeBox = createBox('span', 'messageTimeStamp', '');
+                    if (messages[n]['edited'] === false) {
+                        timeBox.innerText = ' ' + timeStampSwitch(messages[n]['sentAt'])[1] + ' ' + timeStampSwitch(messages[n]['sentAt'])[2];
+                    } else {
+                        timeBox.innerText = ' ' + timeStampSwitch(messages[n]['editedAt'])[1] + ' ' + timeStampSwitch(messages[n]['editedAt'])[2] + ' (edited)';
+                    };
                     timeBox.style.fontSize = '0.8em';
                     timeBox.style.color = '#3D3F40';
+
+                    senderAndTime.append(senderBox);
                     senderAndTime.append(timeBox);
 
                     const messageEditBtn = document.getElementById("messageEditBtn");
@@ -103,81 +114,84 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
 
                     // edit a message
                     const editMessage = newMsgEditBtn.children[1].children[0];
-                    editMessage.addEventListener('click', () => {
-                        const seletedMsg = document.getElementById(messages[n]['id']);
-                        console.log('edit', messages[n]['id']);
-                        const editWindow = document.createElement('span');
-                        editWindow.innerText = seletedMsg.children[1].innerText;
-                        editWindow.contentEditable = true;
-                        editWindow.className = 'messageContent';
-                        const formerMsg = seletedMsg.children[1];
-                        seletedMsg.replaceChild(editWindow, formerMsg);
+                    if (messages[n]['image'].match(/^data:image\/.+/) === null &&
+                        parseInt(messages[n]['sender']) === parseInt(localStorage.getItem('userId'))) {
+                        editMessage.addEventListener('click', () => {
+                            const seletedMsg = document.getElementById(messages[n]['id']);
+                            console.log('edit', messages[n]['id']);
+                            const editWindow = document.createElement('span');
+                            editWindow.innerText = seletedMsg.children[1].innerText;
+                            editWindow.contentEditable = true;
+                            editWindow.className = 'messageContent';
+                            const formerMsg = seletedMsg.children[1];
+                            seletedMsg.replaceChild(editWindow, formerMsg);
 
-                        const cancelBtn = document.createElement('button');
-                        cancelBtn.className = 'btn btn-danger';
-                        cancelBtn.innerText = 'Cancel';
-                        cancelBtn.style.gridColumn = '2/3';
-                        cancelBtn.style.marginTop = '0.5em';
-                        cancelBtn.style.fontSize = '0.7em';
-                        seletedMsg.append(cancelBtn);
-                        const saveBtn = document.createElement('button');
-                        saveBtn.className = 'btn btn-primary';
-                        saveBtn.innerText = 'Save Changes';
-                        saveBtn.style.gridColumn = '4/6';
-                        saveBtn.style.marginTop = '0.5em';
-                        saveBtn.style.fontSize = '0.7em';
-                        seletedMsg.append(saveBtn);
+                            const cancelBtn = document.createElement('button');
+                            cancelBtn.className = 'btn btn-danger';
+                            cancelBtn.innerText = 'Cancel';
+                            cancelBtn.style.gridColumn = '2/3';
+                            cancelBtn.style.marginTop = '0.5em';
+                            cancelBtn.style.fontSize = '0.7em';
+                            seletedMsg.append(cancelBtn);
+                            const saveBtn = document.createElement('button');
+                            saveBtn.className = 'btn btn-primary';
+                            saveBtn.innerText = 'Save Changes';
+                            saveBtn.style.gridColumn = '4/6';
+                            saveBtn.style.marginTop = '0.5em';
+                            saveBtn.style.fontSize = '0.7em';
+                            seletedMsg.append(saveBtn);
 
 
-                        const editBtns = document.getElementsByClassName('editBtn');
-                        for (let m = 0; m < editBtns.length; m++) { editBtns[m].disabled = true; };
+                            const editBtns = document.getElementsByClassName('editBtn');
+                            for (let m = 0; m < editBtns.length; m++) { editBtns[m].disabled = true; };
 
-                        cancelBtn.addEventListener('click', () => {
-                            for (let m = 0; m < editBtns.length; m++) { editBtns[m].disabled = false; }
-                            seletedMsg.removeChild(seletedMsg.lastChild);
-                            seletedMsg.removeChild(seletedMsg.lastChild);
-                            seletedMsg.replaceChild(formerMsg, editWindow);
-                        });
-                        saveBtn.addEventListener('click', () => {
-                            // console.log(seletedMsg.children);
-                            // console.log(editWindow.innerText, formerMsg.innerText);
-                            if (editWindow.innerText.match(/^\s*$/)) {
-                                alert('empty message or message containing only whitespace!!!!');
-                                editWindow.innerText = formerMsg.innerText;
-                            } else if (editWindow.innerText === formerMsg.innerText) {
-                                alert('cannot edit a message to the same existing message...');
-                                // seletedMsg.replaceChild(seletedMsg.children[1], editWindow);
-                            } else {
-                                const token = localStorage.getItem('token');
-                                const currentChannelId = localStorage.getItem('currentChannelId');
-                                const editInfo = JSON.stringify({
-                                    message: editWindow.innerText,
-                                    image: '',
-                                });
-                                // console.log(editInfo);
+                            cancelBtn.addEventListener('click', () => {
+                                for (let m = 0; m < editBtns.length; m++) { editBtns[m].disabled = false; }
+                                seletedMsg.removeChild(seletedMsg.lastChild);
+                                seletedMsg.removeChild(seletedMsg.lastChild);
+                                seletedMsg.replaceChild(formerMsg, editWindow);
+                            });
+                            saveBtn.addEventListener('click', () => {
+                                // console.log(seletedMsg.children);
+                                // console.log(editWindow.innerText, formerMsg.innerText);
+                                if (editWindow.innerText.match(/^\s*$/)) {
+                                    alert('empty message or message containing only whitespace!!!!');
+                                    editWindow.innerText = formerMsg.innerText;
+                                } else if (editWindow.innerText === formerMsg.innerText) {
+                                    alert('cannot edit a message to the same existing message...');
+                                    // seletedMsg.replaceChild(seletedMsg.children[1], editWindow);
+                                } else {
+                                    const token = localStorage.getItem('token');
+                                    const currentChannelId = localStorage.getItem('currentChannelId');
+                                    const editInfo = JSON.stringify({
+                                        message: editWindow.innerText,
+                                        image: '',
+                                    });
+                                    // console.log(editInfo);
 
-                                requestOptions = {
-                                    method: 'PUT',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Authorization': 'Bearer ' + token,
-                                    },
-                                    body: editInfo,
+                                    requestOptions = {
+                                        method: 'PUT',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' + token,
+                                        },
+                                        body: editInfo,
+                                    };
+                                    fetch(`http://localhost:5005/message/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
+                                        if (response.status === 200) {
+                                            response.json().then((data) => {
+                                                for (let m = 0; m < editBtns.length; m++) { editBtns[m].disabled = false; };
+                                                refreshCurrentChannelMsg(currentChannelId, token, allUsersInfo);
+                                            });
+                                        } else {
+                                            alert("sendMessage failed...");
+                                        }
+                                    });
                                 };
-                                fetch(`http://localhost:5005/message/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
-                                    if (response.status === 200) {
-                                        response.json().then((data) => {
-                                            for (let m = 0; m < editBtns.length; m++) { editBtns[m].disabled = false; };
-                                            refreshCurrentChannelMsg(currentChannelId, token, allUsersInfo);
-                                        });
-                                    } else {
-                                        alert("sendMessage failed...");
-                                    }
-                                });
-                            };
-                        })
+                            })
+                        });
+                    };
 
-                    });
 
                     // delete messages
                     const deleteMessage = newMsgEditBtn.children[1].children[1];
@@ -317,9 +331,14 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     };
 
                     // append the message(image) box
-                    const messageImageBox = createBox('span', 'messageImageBox', tempReact);
+                    const messageImageBox = createBox('span', 'messageImageBox', '');
                     const messageImage = document.createElement('img');
                     messageImage.src = messages[n]['image'];
+                    if (messageImage.src.match(/^data:image\/.+/)) {
+                        messageImage.id = `photo${currentPhotoId}`;
+                        currentPhotoId += 1;
+                        photos.push(messageImage.src);
+                    }
                     messageImageBox.append(messageImage);
                     chat.append(messageImageBox);
 
@@ -327,16 +346,17 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     messageImage.addEventListener('mouseover', () => {
                         messageImage.style.cursor = 'pointer';
                     });
+
                     messageImage.addEventListener('click', () => {
                         document.getElementById('messageImageEnlarged').firstChild.src = messageImage.src;
+                        document.getElementById('messageImageEnlarged').firstChild.id = `enlarged${messageImage.id}`;
                         displayContentById('messageImageEnlargeMask');
-
                     });
 
-
-
+                    // append the messageReact box
                     chat.append(createBox('span', 'messageReactBar', tempReact));
 
+                    // append the messageSenderProfilePicture box
                     const imgBox = createBox('div', 'messageSenderImg', '');
                     const img = document.createElement('img');
                     (allUsersInfo[messages[n]['sender']]['image']) ? img.src = allUsersInfo[messages[n]['sender']]['image']:
@@ -371,6 +391,39 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
         }
     });
 }
+
+const moveOverOutSetting = (element) => {
+    element.addEventListener('mouseover', () => {
+        element.style.cursor = 'pointer';
+        element.style.backgroundColor = 'rgb(238, 238, 238)';
+    });
+    element.addEventListener('mouseout', () => {
+        element.style.backgroundColor = '';
+    });
+};
+const messageImageBack = document.getElementById('messageImageBack');
+const messageImageForward = document.getElementById('messageImageForward');
+const messageImageEnlarged = document.getElementById('messageImageEnlarged');
+
+moveOverOutSetting(messageImageBack);
+moveOverOutSetting(messageImageForward);
+
+let currentEnlargedPhotoIndex = -1;
+messageImageBack.addEventListener('click', () => {
+    // console.log(messageImageEnlarged.firstChild.id);
+    currentEnlargedPhotoIndex = parseInt(messageImageEnlarged.firstChild.id.match(/\d+/)[0]);
+    (currentEnlargedPhotoIndex === photos.length - 1) ? currentEnlargedPhotoIndex = 0: currentEnlargedPhotoIndex += 1;
+    messageImageEnlarged.firstChild.src = photos[currentEnlargedPhotoIndex];
+    messageImageEnlarged.firstChild.id = `enlargedphoto${currentEnlargedPhotoIndex}`;
+});
+
+messageImageForward.addEventListener('click', () => {
+    currentEnlargedPhotoIndex = parseInt(messageImageEnlarged.firstChild.id.match(/\d+/)[0]);
+    (currentEnlargedPhotoIndex === 0) ? currentEnlargedPhotoIndex = photos.length - 1: currentEnlargedPhotoIndex -= 1;
+    messageImageEnlarged.firstChild.src = photos[currentEnlargedPhotoIndex];
+    messageImageEnlarged.firstChild.id = `enlargedphoto${currentEnlargedPhotoIndex}`;
+});
+
 
 // send a picture
 document.getElementById('sendPictureBtn').addEventListener('change', () => {
