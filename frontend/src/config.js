@@ -1,1 +1,1 @@
-export const BACKEND_PORT = 5678
+export const BACKEND_PORT = 8343

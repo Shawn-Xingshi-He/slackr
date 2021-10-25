@@ -15,7 +15,7 @@ main {
 #register {
     display: grid;
     justify-items: center;
-    width: 300px;
+    max-width: 350px;
     margin: 4% auto;
     background-color: rgb(16, 156, 221);
     gap: 1em 0;

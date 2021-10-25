@@ -118,8 +118,8 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     // edit a message
                     const editMessage = newMsgEditBtn.children[1].children[0];
                     // if (messages[n]['image'].match(/^data:image\/.+/) === null &&
-                    if (messages[n]['image'] === null &&
-                        parseInt(messages[n]['sender']) === parseInt(localStorage.getItem('userId'))) {
+                    if (parseInt(messages[n]['sender']) === parseInt(localStorage.getItem('userId')) &&
+                        messages[n]['message'] !== '') {
                         editMessage.addEventListener('click', () => {
                             const seletedMsg = document.getElementById(messages[n]['id']);
                             console.log('edit', messages[n]['id']);
@@ -194,9 +194,14 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                                 };
                             })
                         });
+                    } else if (parseInt(messages[n]['sender']) === parseInt(localStorage.getItem('userId')) &&
+                        messages[n]['message'] !== '') {
+                        editMessage.addEventListener('click', () => {
+                            updateInfoPopup('Photos can not be edited!');
+                        });
                     } else {
                         editMessage.addEventListener('click', () => {
-                            updateInfoPopup('You are not the sender of this message, not permission to edit it!');
+                            updateInfoPopup('No permission to edit photos and  messages sent by other users!');
                         });
                     };
 
