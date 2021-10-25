@@ -13,10 +13,27 @@ main {
 
 #login,
 #register {
+    display: grid;
     justify-items: center;
     width: 300px;
     margin: 4% auto;
     background-color: rgb(16, 156, 221);
+    gap: 1em 0;
+}
+
+#loginTitle,
+#registerTitle {
+    font-size: 1.5em;
+    margin-top: 0.2em;
+}
+
+#loginInfo,
+#registerInfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+    gap: 1em 0;
+    margin: 0 1em;
 }
 
 .mask {

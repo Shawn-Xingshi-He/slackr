@@ -104,7 +104,9 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                                     document.getElementById("oneUserProfileName").innerText = data['name'];
                                     document.getElementById("oneUserBio").innerText = data['bio'];
                                     document.getElementById("oneUserEmail").innerText = data['email'];
-                                    document.getElementById("oneUserPhoto").innerText = data['image'];
+                                    document.getElementById("oneUserPhoto").src = data['image'];
+                                    (data['image'] !== null && data['image'].match(/^data:image\/.+/)) ? document.getElementById("oneUserPhoto").src = data['image']:
+                                        document.getElementById("oneUserPhoto").src = '../images/person-lines-fill.svg';
                                     document.getElementById("oneUserProfileTitle").children[0].innerText = `${data['name']}'s profile`;
                                     displayContentById("oneUserProfileMask");
                                 });
@@ -115,7 +117,8 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
 
                     // edit a message
                     const editMessage = newMsgEditBtn.children[1].children[0];
-                    if (messages[n]['image'].match(/^data:image\/.+/) === null &&
+                    // if (messages[n]['image'].match(/^data:image\/.+/) === null &&
+                    if (messages[n]['image'] === null &&
                         parseInt(messages[n]['sender']) === parseInt(localStorage.getItem('userId'))) {
                         editMessage.addEventListener('click', () => {
                             const seletedMsg = document.getElementById(messages[n]['id']);
@@ -244,7 +247,10 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                             fetch(`http://localhost:${BACKEND_PORT}/message/pin/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
                                 if (response.status === 200) {
                                     response.json().then((data) => {
-                                        console.log("pinMessage succeed!!!")
+                                        console.log("pinMessage succeed!!!");
+                                        const chatCopy = chat.cloneNode(true);
+                                        chatCopy.id = `copy${chat.id}`;
+                                        pinPopup.insertBefore(chatCopy, pinPopup.firstElementChild);
                                     });
                                 } else {
                                     alert("pinMessage failed...");
@@ -260,7 +266,10 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                             fetch(`http://localhost:${BACKEND_PORT}/message/unpin/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
                                 if (response.status === 200) {
                                     response.json().then((data) => {
-                                        console.log("unpinMessage succeed!!!")
+                                        console.log("unpinMessage succeed!!!");
+                                        const chatCopy = chat.cloneNode(true);
+                                        chatCopy.id = `copy${chat.id}`;
+                                        pinPopup.removeChild(document.getElementById(chatCopy.id));
                                     });
                                 } else {
                                     alert("unpinMessage failed...");
@@ -361,7 +370,7 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     const imgBox = createBox('div', 'messageSenderImg', '');
                     const img = document.createElement('img');
                     (allUsersInfo[messages[n]['sender']]['image']) ? img.src = allUsersInfo[messages[n]['sender']]['image']:
-                        img.src = '../images/person-lines-fill.svg';;
+                        img.src = '../images/person-lines-fill.svg';
                     imgBox.append(img);
                     // console.log(messages[n]['pinned']);
                     if (messages[n]['pinned'] === true) {
@@ -444,9 +453,8 @@ document.getElementById('sendMsgBtn').addEventListener('click', () => {
     // console.log(msgContent);
     if (msgContent.match(/^\s*$/)) {
         console.log(false);
-        if (document.getElementById('sendPictureShow').src.match(/^data:image\/.+/)) {
-
-
+        if (document.getElementById('sendPictureShow').src !== null &&
+            document.getElementById('sendPictureShow').src.match(/^data:image\/.+/)) {
             // console.log('there is a picture!!!');
             // console.log('srcreal!!!!', document.getElementById('sendPictureShow').src);
 

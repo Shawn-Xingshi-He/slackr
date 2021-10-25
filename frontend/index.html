@@ -33,7 +33,7 @@
                 <div class="infoItem">Name<br><span id="oneUserProfileName"></span></div>
                 <div class="infoItem">Bio<br><span id="oneUserBio"></span></div>
                 <div class="infoItem">Email<br><span id="oneUserEmail"></span></div>
-                <div class="infoItem">Photo<br><span id="oneUserPhoto"></span></div>
+                <div class="infoItem">Photo<br><img id="oneUserPhoto" src="" alt="userPhoto"></div>
             </div>
         </div>
     </div>
@@ -151,24 +151,30 @@
     <!-- <main role="main"> -->
     <!-- app goes here -->
     <div id="login">
-        <label for="loginEmail">Email: </label> <input type="text" id="loginEmail" value="714024324@qq.com"> <br> <br>
-        <label for="loginPassword"> Password: </label><input type="password" id="loginPassword" value="qazxswedc"><br><br>
-        <div id="loginError" style="display: none;">Your email or password was incorrect.</div>
+        <div id="loginTitle">Slackr <span style="font-size: 0.6em;">(Sign in)</span></div>
+        <div id="loginInfo">
+            <label for="loginEmail">Email: </label> <input type="text" id="loginEmail" value="714024324@qq.com">
+            <label for="loginPassword"> Password: </label><input type="password" id="loginPassword" value="qazxswedc">
+        </div>
+        <div id="loginError" style="display: none; color: #CC0101;">Your email or password was incorrect.</div>
         <button type="submit" id="loginBtn">Sign in</button>
-        <div id="toRegisterPage">
-            <a href="#">New to Slackr? Create an account</a>
+        <div id="toRegisterPage" style="margin-bottom:0.2em;">
+            <a href="#" style="color: white;">New to Slackr? Create an account</a>
         </div>
     </div>
 
     <div id="register" style="display: none;">
-        <label for="registerEmail">Email: </label> <input type="text" id="registerEmail"> <br>
-        <label for="registerName">Name: </label> <input type="text" id="registerName"> <br>
-        <label for="registerPassword"> Password: </label><input type="password" id="registerPassword"><br>
-        <label for="registerConfirmPassword"> Confirm Password: </label><input type="password" id="registerConfirmPassword"><br>
-        <div id="registerError" style="display: none;">Your passwords didn't match.</div>
+        <div id="registerTitle">Slackr <span style="font-size: 0.6em;">(Register)</span></div>
+        <div id="registerInfo">
+            <label for="registerEmail">Email: </label> <input type="text" id="registerEmail">
+            <label for="registerName">Name: </label> <input type="text" id="registerName">
+            <label for="registerPassword"> Password: </label><input type="password" id="registerPassword">
+            <label for="registerConfirmPassword"> Confirm Password: </label><input type="password" id="registerConfirmPassword">
+        </div>
+        <div id="registerError" style="display: none; color: #CC0101;">Your passwords didn't match.</div>
         <button type="submit" id="registerBtn">Register</button>
-        <div id="toLoginPage">
-            <a href="#">Already have an account? Sign in</a>
+        <div id="toLoginPage" style="margin-bottom:0.2em;">
+            <a href="#" style="color: white;">Already have an account? Sign in</a>
         </div>
 
     </div>

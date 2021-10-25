@@ -82,6 +82,10 @@
     font-weight: lighter;
 }
 
+#oneUserPhoto {
+    width: 5em;
+}
+
 #currentChannelInfoBtnBar {
     grid-template-columns: 1fr 1fr;
 }

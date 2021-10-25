@@ -26,6 +26,7 @@ stopPropagationFuc('currentChannelInfo');
 stopPropagationFuc('userProfileInfo');
 stopPropagationFuc('memberPopup');
 stopPropagationFuc('messageImageEnlargeBox');
+stopPropagationFuc('oneUserProfile');
 
 
 // clean the channel content space
@@ -90,7 +91,7 @@ export const linkChannel = (id) => {
                     });
 
                     document.getElementById('pinMsgBar').addEventListener('click', () => {
-                        refreshCurrentChannelMsg(id, token, allUsersInfo);
+                        // refreshCurrentChannelMsg(id, token, allUsersInfo);
                         displayContentById('pinPopupMask');
                     });
 
@@ -330,7 +331,7 @@ const showAllChannels = (data) => {
     while (unjoinChannels.hasChildNodes()) { unjoinChannels.removeChild(unjoinChannels.childNodes[0]) };
 
     const userId = localStorage.getItem('userId');
-    console.log('SHOWlistUserId', userId);
+    // console.log('SHOWlistUserId', userId);
     const joinChannelIDs = new Array();
     const unjoinChannelIDs = new Array();
     data['channels'].forEach((channel) => {

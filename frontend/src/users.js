@@ -55,6 +55,7 @@ const getOneUserInfo = (userId, token) => {
                     annotation.innerText = ' (You)';
                     userBox.append(annotation);
                     document.getElementById('userYourself').append(userBar);
+                    userBar.addEventListener('click', getYourProfile);
                 } else {
                     let positionIndex = 0;
                     for (let n = 0; n < allUsers.children.length; n++) {
@@ -63,6 +64,27 @@ const getOneUserInfo = (userId, token) => {
                         }
                     };
                     (positionIndex === allUsers.children.length) ? allUsers.append(userBar): allUsers.insertBefore(userBar, allUsers.children[positionIndex]);
+                    userBar.addEventListener('click', () => {
+                        fetch(`http://localhost:${BACKEND_PORT}/user/${userId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token,
+                            }
+                        }).then((response) => {
+                            if (response.status === 200) {
+                                response.json().then((data) => {
+                                    document.getElementById("oneUserProfileName").innerText = data['name'];
+                                    document.getElementById("oneUserBio").innerText = data['bio'];
+                                    document.getElementById("oneUserEmail").innerText = data['email'];
+                                    (data['image'] !== null && data['image'].match(/^data:image\/.+/)) ? document.getElementById("oneUserPhoto").src = data['image']:
+                                        document.getElementById("oneUserPhoto").src = '../images/person-lines-fill.svg';
+                                    document.getElementById("oneUserProfileTitle").children[0].innerText = `${data['name']}'s profile`;
+                                    displayContentById("oneUserProfileMask");
+                                });
+                            };
+                        })
+                    });
                 };
             });
         } else {
@@ -73,11 +95,6 @@ const getOneUserInfo = (userId, token) => {
 
 // Get a list of all the users
 export const getAllUsers = (token) => {
-    // let allMembers = new Object();
-    // const userId = localStorage.getItem('userId');
-    // const token = localStorage.getItem('token');
-    // let currentChannelMembers = localStorage.getItem('currentChannelMembers').split(',');
-    // const channelId = localStorage.getItem('channelId');
     fetch(`http://localhost:${BACKEND_PORT}/user`, {
         method: 'GET',
         headers: {
@@ -105,14 +122,11 @@ export const getAllUsers = (token) => {
 }
 
 // display user profile and update
-document.getElementById('userProfileBtn').addEventListener('click', () => {
+export const getYourProfile = () => {
     displayContentById('userProfileMask');
     const userId = localStorage.getItem('userId');
     const password = localStorage.getItem('password');
     const token = localStorage.getItem('token');
-    // console.log(userId);
-    // console.log(allUsersInfo);
-
     fetch(`http://localhost:${BACKEND_PORT}/user/${userId}`, {
         method: 'GET',
         headers: {
@@ -142,8 +156,10 @@ document.getElementById('userProfileBtn').addEventListener('click', () => {
             alert("getUserProfileInfo failed...");
         };
     });
-    console.log(document.getElementById('userProfileInfoImage'));
-});
+};
+
+document.getElementById('userProfileBtn').addEventListener('click', getYourProfile);
+
 
 document.getElementById('userProfileInfoPasswordToggle').addEventListener('click', () => {
     if (document.getElementById('userProfileInfoPasswordToggle').checked === true) {
@@ -152,7 +168,6 @@ document.getElementById('userProfileInfoPasswordToggle').addEventListener('click
         document.getElementById('userProfileInfoPassword').type = 'Password';
     };
 });
-
 
 
 document.getElementById('userProfileUpdateBtn').addEventListener('click', () => {

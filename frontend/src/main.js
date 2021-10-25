@@ -49,6 +49,13 @@ document.getElementById('loginBtn').addEventListener('click', () => {
     });
 });
 
+document.getElementById('loginEmail').addEventListener('click', () => {
+    hideContentById('loginError');
+});
+document.getElementById('loginPassword').addEventListener('click', () => {
+    hideContentById('loginError');
+});
+
 // sign out
 document.getElementById('signOutBtn').addEventListener('click', () => {
     const token = localStorage.getItem('token');
@@ -66,6 +73,9 @@ document.getElementById('signOutBtn').addEventListener('click', () => {
                 localStorage.clear();
                 hideContentById('channels');
                 displayContentById('login');
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+
             })
         } else if (response.status === 400) {
             alert('loginOut failed...');
@@ -105,11 +115,17 @@ document.getElementById('registerBtn').addEventListener('click', () => {
                     openChannels(data['token']);
                 })
             } else if (response.status === 400) {
-                alert("please enter valid details!");
+                alert("Please enter valid details!");
             }
         });
     } else {
         displayContentById('registerError');
     }
+});
 
-})
+document.getElementById('registerPassword').addEventListener('click', () => {
+    hideContentById('registerError');
+});
+document.getElementById('registerConfirmPassword').addEventListener('click', () => {
+    hideContentById('registerError');
+});
