@@ -35,7 +35,7 @@ document.getElementById('loginBtn').addEventListener('click', () => {
     fetch(`http://localhost:${BACKEND_PORT}/auth/login`, requestOptions).then((response) => {
         if (response.status === 200) {
             hideContentById('loginError');
-            console.log('Login succeeded!');
+            // console.log('Login succeeded!');
             response.json().then((data) => {
                 localStorage.setItem('userId', data['userId']);
                 localStorage.setItem('token', data['token']);
@@ -89,7 +89,7 @@ document.getElementById('registerBtn').addEventListener('click', () => {
     const name = document.getElementById('registerName').value;
     const password = document.getElementById('registerPassword').value;
     const confirmPassword = document.getElementById('registerConfirmPassword').value;
-    console.log(email, name + password, confirmPassword);
+    // console.log(email, name + password, confirmPassword);
 
     const registerInfo = JSON.stringify({
         email,
@@ -108,7 +108,7 @@ document.getElementById('registerBtn').addEventListener('click', () => {
         fetch(`http://localhost:${BACKEND_PORT}/auth/register`, requestOptions).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    console.log(data);
+                    // console.log(data);
                     localStorage.setItem('userId', data['userId']);
                     localStorage.setItem('token', data['token']);
                     localStorage.setItem('password', password);

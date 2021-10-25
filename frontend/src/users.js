@@ -136,7 +136,7 @@ export const getYourProfile = () => {
     }).then((response) => {
         if (response.status === 200) {
             response.json().then((data) => {
-                console.log(data);
+                // console.log(data);
                 document.getElementById('userProfileInfoName').value = data['name'];
                 document.getElementById('userProfileInfoBio').value = data['bio'];
                 document.getElementById('userProfileInfoEmail').value = data['email'];
@@ -146,7 +146,7 @@ export const getYourProfile = () => {
                 document.getElementById('userProfileInfoImage').addEventListener('change', () => {
 
                     const file = document.getElementById('userProfileInfoImage').files[0];
-                    console.log(document.getElementById('userProfileInfoImage').files[0]['name']);
+                    // console.log(document.getElementById('userProfileInfoImage').files[0]['name']);
                     fileToDataUrl(file).then(data => {
                         document.getElementById('userProfileInfoImageShow').src = data;
                     });
@@ -213,7 +213,7 @@ document.getElementById('userProfileUpdateBtn').addEventListener('click', () => 
                     localStorage.setItem('password', newPassword);
                     updateInfoPopup("Update user's own profile successfully!!!");
                     openChannels(token);
-                    console.log("Update user's own profile successfully!!!");
+                    // console.log("Update user's own profile successfully!!!");
                 });
             } else {
                 alert("Failed to update user's own profile...");

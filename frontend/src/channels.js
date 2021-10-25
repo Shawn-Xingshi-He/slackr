@@ -66,7 +66,7 @@ export const linkChannel = (id) => {
         fetch(`http://localhost:${BACKEND_PORT}/channel/${id}`, requestOptions).then((response) => {
             if (response.status === 200) {
                 response.json().then((data) => {
-                    console.log(data);
+                    // console.log(data);
                     localStorage.setItem('currentChannelName', data['name']);
                     localStorage.setItem('currentChannelDescription', data['description']);
                     localStorage.setItem('currentChannelMembers', data['members']);
@@ -99,14 +99,14 @@ export const linkChannel = (id) => {
                         displayContentById('memberPopupMask');
                     })
 
-                    console.log(data['members']);
+                    // console.log(data['members']);
                     const memberList = document.getElementById('memberList');
                     const nonMemberList = document.getElementById('nonMemberList');
                     while (memberList.hasChildNodes()) { memberList.removeChild(memberList.childNodes[0]) };
                     while (nonMemberList.hasChildNodes()) { nonMemberList.removeChild(nonMemberList.childNodes[0]) };
 
                     for (let item in allUsersInfo) {
-                        console.log(item);
+                        // console.log(item);
                         const memberBar = document.createElement('li');
                         const memberBox = document.createElement('span');
                         memberBar.id = `member${item}`;
@@ -146,7 +146,7 @@ export const linkChannel = (id) => {
                 alert("Channel opening failed...");
             }
         });
-        console.log(allUsersInfo);
+        // console.log(allUsersInfo);
         refreshCurrentChannelMsg(id, token, allUsersInfo);
 
 
@@ -159,7 +159,7 @@ document.getElementById('updateChannelInfo').addEventListener('click', () => {
 
     if (newChannelName === localStorage.getItem('currentChannelName') &&
         newChannelDescription === localStorage.getItem('currentChannelDescription')) {
-        updateInfoPopup("Nothing changed!!! Try again!!!")
+        updateInfoPopup("Nothing changed!!! Try again!!!");
     } else {
         const channelUpdateInfo = JSON.stringify({
             name: newChannelName,
@@ -184,7 +184,7 @@ document.getElementById('updateChannelInfo').addEventListener('click', () => {
                     localStorage.setItem('currentChannelDescription', newChannelDescription);
                     updateInfoPopup('Update channel Information successfully!!!');
                     // openChannels(token);
-                    console.log('Update channel Information successfully!!!');
+                    // console.log('Update channel Information successfully!!!');
                 });
             } else {
                 alert('Failed to update channel Information...');
@@ -220,7 +220,7 @@ document.getElementById('addMemberBtn').addEventListener('click', () => {
             fetch(`http://localhost:${BACKEND_PORT}/channel/${ChannelId}/invite`, requestOptions).then((response) => {
                 if (response.status === 200) {
                     response.json().then((data) => {
-                        console.log('Invited one user successfully!!!');
+                        // console.log('Invited one user successfully!!!');
 
                         const addUser = document.getElementById(`member${addedUserId}`);
                         const addUserCopy = addUser.cloneNode(true);
@@ -297,7 +297,7 @@ const joinChannel = (id) => {
 document.getElementById('currentChannelInfoLeave').addEventListener('click', () => {
     const currentChannelId = localStorage.getItem('currentChannelId');
     const token = localStorage.getItem('token');
-    console.log(currentChannelId);
+    // console.log(currentChannelId);
     fetch(`http://localhost:${BACKEND_PORT}/channel/${currentChannelId}/leave`, {
         method: 'POST',
         headers: {

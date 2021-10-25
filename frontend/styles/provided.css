@@ -184,6 +184,8 @@ li {
     display: grid;
     grid-template-columns: 50px repeat(11, 1fr);
     margin-top: 15px;
+    border-radius: 0.5em;
+    color: black;
 }
 
 .oneMessage .messageSenderImg {
@@ -213,15 +215,17 @@ li {
 }
 
 .oneMessage .messageContent {
-    background-color: #DBF8FF;
     grid-column: 2/13;
+    background-color: #DBF8FF;
+    padding: 0 0.5em 0.5em;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
 }
 
 .oneMessage .messageImageBox {
-    background-color: #DBF8FF;
     grid-column: 2/13;
+    background-color: #DBF8FF;
+    padding: 0 0.5em 0.5em;
 }
 
 .oneMessage .messageImageBox img {

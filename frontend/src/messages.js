@@ -1,5 +1,5 @@
 import { BACKEND_PORT } from './config.js';
-import { allUsersInfo } from "./users.js";
+import { allUsersInfo, updateInfoPopup } from "./users.js";
 import { displayContentById } from "./utility.js";
 import { fileToDataUrl } from './helpers.js';
 
@@ -194,32 +194,40 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                                 };
                             })
                         });
+                    } else {
+                        editMessage.addEventListener('click', () => {
+                            updateInfoPopup('You are not the sender of this message, not permission to edit it!');
+                        });
                     };
 
 
                     // delete messages
                     const deleteMessage = newMsgEditBtn.children[1].children[1];
-                    deleteMessage.addEventListener('click', () => {
-                        requestOptions = {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + token,
-                            }
-                        };
+                    if (messages[n]['sender'] == parseInt(localStorage.getItem('userId'))) {
+                        deleteMessage.addEventListener('click', () => {
+                            requestOptions = {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + token,
+                                }
+                            };
 
-                        fetch(`http://localhost:${BACKEND_PORT}/message/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
-                            if (response.status === 200) {
-                                response.json().then((data) => {
-                                    const currentChannelId = localStorage.getItem('currentChannelId');
-                                    refreshCurrentChannelMsg(currentChannelId, token, allUsersInfo);
-                                });
-                            } else {
-                                alert("editMessage failed...");
-                            }
+                            fetch(`http://localhost:${BACKEND_PORT}/message/${id}/${messages[n]['id']}`, requestOptions).then((response) => {
+                                if (response.status === 200) {
+                                    response.json().then((data) => {
+                                        const currentChannelId = localStorage.getItem('currentChannelId');
+                                        refreshCurrentChannelMsg(currentChannelId, token, allUsersInfo);
+                                    });
+                                } else { alert("editMessage failed...") }
+                            });
                         });
 
-                    });
+                    } else {
+                        deleteMessage.addEventListener('click', () => {
+                            updateInfoPopup('You are not the sender of this message, not permission to delete it!');
+                        });
+                    };
 
 
                     // pin & unpin message 
@@ -441,53 +449,50 @@ document.getElementById('sendPictureBtn').addEventListener('change', () => {
     const file = document.getElementById('sendPictureBtn').files[0];
     fileToDataUrl(file).then(data => { document.getElementById('sendPictureShow').src = data; });
 });
-console.log(document.getElementById('sendPictureShow').src);
-console.log(document.getElementById('sendPictureShow').src);
-console.log(document.getElementById('sendPictureShow').src == '');
-console.log(document.getElementById('sendPictureShow').src == undefined);
 
 // send a message
 document.getElementById('sendMsgBtn').addEventListener('click', () => {
     const msgContent = document.getElementById('currentChannelInput').innerText;
     let imgContent = '';
     // console.log(msgContent);
-    if (msgContent.match(/^\s*$/)) {
-        console.log(false);
+    if (msgContent.match(/^\s*$/) && document.getElementById('sendPictureShow').src !== null &&
+        !document.getElementById('sendPictureShow').src.match(/^data:image\/.+/)) {
+        updateInfoPopup('Sorry, you cannot empty messages...');
+
+    } else if (!msgContent.match(/^\s*$/) &&
+        document.getElementById('sendPictureShow').src !== null &&
+        document.getElementById('sendPictureShow').src.match(/^data:image\/.+/)) {
+        updateInfoPopup('Sorry, you cannot send messages and photos together...');
+    } else {
         if (document.getElementById('sendPictureShow').src !== null &&
             document.getElementById('sendPictureShow').src.match(/^data:image\/.+/)) {
-            // console.log('there is a picture!!!');
-            // console.log('srcreal!!!!', document.getElementById('sendPictureShow').src);
-
             imgContent = document.getElementById('sendPictureShow').src;
-        }
+        };
+        const token = localStorage.getItem('token');
+        const currentChannelId = localStorage.getItem('currentChannelId');
+        // console.log('currentChannelId',currentChannelId);
+        const msgInfo = JSON.stringify({
+            message: msgContent,
+            image: imgContent,
+        });
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: msgInfo,
+        };
+
+        fetch(`http://localhost:${BACKEND_PORT}/message/${currentChannelId}`, requestOptions).then((response) => {
+            if (response.status === 200) {
+                response.json().then((data) => {
+                    document.getElementById('currentChannelInput').innerText = '';
+                    document.getElementById('sendPictureShow').src = '';
+                    refreshCurrentChannelMsg(currentChannelId, token, allUsersInfo);
+                });
+            } else { alert("sendMessage failed...") }
+        });
     }
-    const token = localStorage.getItem('token');
-    const currentChannelId = localStorage.getItem('currentChannelId');
-    // console.log('currentChannelId',currentChannelId);
-    const msgInfo = JSON.stringify({
-        message: msgContent,
-        image: imgContent,
-    });
-
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token,
-        },
-        body: msgInfo,
-    };
-
-    fetch(`http://localhost:${BACKEND_PORT}/message/${currentChannelId}`, requestOptions).then((response) => {
-        if (response.status === 200) {
-            response.json().then((data) => {
-                document.getElementById('currentChannelInput').innerText = '';
-                document.getElementById('sendPictureShow').src = '';
-                refreshCurrentChannelMsg(currentChannelId, token, allUsersInfo);
-            });
-        } else {
-            alert("sendMessage failed...");
-        }
-    });
-
 })
