@@ -79,6 +79,11 @@ export const linkChannel = (id) => {
 
                     const currentChannelName = document.getElementById('currentChannelName');
                     currentChannelName.innerText = data['name'];
+
+                    currentChannelName.addEventListener('mouseover', () => {
+                        currentChannelName.style.cursor = 'pointer';
+                    });
+
                     currentChannelName.addEventListener('click', () => {
                         // document.getElementById('currentChannelInfoTitle').children[0].innerText = `Channel: ${data['name']}`;
                         document.getElementById('currentChannelInfoName').innerText = data['name'];
@@ -93,6 +98,10 @@ export const linkChannel = (id) => {
                     document.getElementById('pinMsgBar').addEventListener('click', () => {
                         // refreshCurrentChannelMsg(id, token, allUsersInfo);
                         displayContentById('pinPopupMask');
+                    });
+
+                    document.getElementById('channelMembers').addEventListener('mouseover', () => {
+                        document.getElementById('channelMembers').style.cursor = 'pointer';
                     });
 
                     document.getElementById('channelMembers').addEventListener('click', () => {
@@ -184,7 +193,7 @@ document.getElementById('updateChannelInfo').addEventListener('click', () => {
                     localStorage.setItem('currentChannelDescription', newChannelDescription);
                     updateInfoPopup('Update channel Information successfully!!!');
                     // openChannels(token);
-                    // console.log('Update channel Information successfully!!!');
+                    console.log('Update channel Information successfully!!!');
                 });
             } else {
                 alert('Failed to update channel Information...');
@@ -220,7 +229,7 @@ document.getElementById('addMemberBtn').addEventListener('click', () => {
             fetch(`http://localhost:${BACKEND_PORT}/channel/${ChannelId}/invite`, requestOptions).then((response) => {
                 if (response.status === 200) {
                     response.json().then((data) => {
-                        // console.log('Invited one user successfully!!!');
+                        console.log('Invited one user successfully!!!');
 
                         const addUser = document.getElementById(`member${addedUserId}`);
                         const addUserCopy = addUser.cloneNode(true);
@@ -420,7 +429,7 @@ document.getElementById('createChannelBtn').addEventListener('click', () => {
             document.getElementById('makePrivate').checked = false;
             closePopupForm();
             response.json().then((data) => {
-                console.log(data);
+                // console.log(data);
                 openChannels(token);
             });
         } else {

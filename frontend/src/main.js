@@ -129,3 +129,41 @@ document.getElementById('registerPassword').addEventListener('click', () => {
 document.getElementById('registerConfirmPassword').addEventListener('click', () => {
     hideContentById('registerError');
 });
+
+
+window.addEventListener('resize', () => {
+    if (document.body.clientWidth < 500) {
+        document.getElementById('channelsBar').style.display = 'none';
+        document.getElementById('channelContent').style.gridColumn = '1/13';
+        document.getElementById('headerChannelBarBtn').style.display = 'grid';
+
+    } else {
+        document.getElementById('channelsBar').style.display = 'grid';
+        document.getElementById('channelContent').style.gridColumn = '';
+        document.getElementById('headerChannelBarBtn').style.display = 'none';
+    }
+    // console.log('g', document.body.clientWidth, document.body.clientHeight);
+    // console.log('ddd', document.documentElement.clientWidth, document.documentElement.clientHeight);
+})
+
+let channelBarBtnflag = false;
+document.getElementById('headerChannelBarBtn').addEventListener('click', () => {
+    if (channelBarBtnflag === false) {
+        document.getElementById('channelsBar').style.display = 'grid';
+        document.getElementById('channelContent').style.gridColumn = '';
+        document.getElementById('headerChannelBarBtn').backgroundColor = 'rgb(255, 255, 255, 0.5)';
+    } else {
+        document.getElementById('channelsBar').style.display = 'none';
+        document.getElementById('channelContent').style.gridColumn = '1/13';
+        document.getElementById('headerChannelBarBtn').backgroundColor = 'none';
+    }
+    channelBarBtnflag = !channelBarBtnflag;
+    // if (channelBarBtnflag = false) {
+
+
+    // } else {
+    //     document.getElementById('channelsBar').style.display = 'none';
+    //     // document.getElementById('channelContent').style.gridColumn = '';
+    // }
+    // channelBarBtnflag = !channelBarBtnflag;
+});

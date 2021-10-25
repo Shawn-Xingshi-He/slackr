@@ -290,6 +290,11 @@ export const refreshCurrentChannelMsg = (id, token, allUsersInfo) => {
                     // react & unreact message
                     const reactMessages = newMsgEditBtn.children[1].children[3].children;
                     for (let m = 0; m < reactMessages.length; m++) {
+
+                        reactMessages[m].addEventListener('mouseover', () => {
+                            reactMessages[m].style.cursor = 'pointer';
+                        });
+
                         reactMessages[m].addEventListener('click', () => {
                             let seletedMsg = document.getElementById(messages[n]['id']);
                             let emojiExist = false;

@@ -72,6 +72,16 @@ main {
     margin: 0 0.5em;
 }
 
+#headerChannelBarBtn {
+    display: none;
+    padding: 0.5em;
+    border-radius: 0.1em;
+}
+
+#headerChannelBarBtn:hover {
+    background-color: rgb(255, 255, 255, 0.5);
+}
+
 #channels header .btn-group {
     grid-column: 12/13;
     justify-self: right;
@@ -146,7 +156,7 @@ li {
 }
 
 #channelContent #currentChannelName {
-    grid-area: 1/1/2/10;
+    grid-area: 1/1/2/12;
     justify-self: left;
     font-size: 0.8em;
     margin-left: 0.5em;
@@ -269,7 +279,7 @@ li {
 }
 
 #sendPictureBtn {
-    grid-column: 3/8;
+    grid-column: 3/12;
     margin: 0 0.5em;
 }
 
